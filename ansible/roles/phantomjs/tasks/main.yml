@@ -1,0 +1,7 @@
+---
+- name: add PPA
+  apt_repository: repo='ppa:tanguy-patte/phantomjs'
+                  state=present
+
+- name: install phantomjs
+  apt: pkg=phantomjs state=latest update_cache=true

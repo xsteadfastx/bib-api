@@ -1,0 +1,7 @@
+---
+- name: install deps
+  apt: pkg={{ item }} state=latest update_cache=true
+  with_items:
+    - git
+    - python3
+    - python3-pip

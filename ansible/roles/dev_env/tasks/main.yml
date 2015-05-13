@@ -1,0 +1,67 @@
+---
+- name: install deps
+  apt: pkg={{ item }} state=latest update_cache=true
+  with_items:
+    - curl
+    - zsh
+    - stow
+    - vim
+    - python-virtualenv
+
+- name: get dotfiles
+  git: repo=https://github.com/xsteadfastx/dotfiles.git
+       dest=/home/vagrant/dotfiles
+  become: yes
+  become_user: vagrant
+
+- name: enable dotfiles
+  shell: stow {{ item }}
+  with_items:
+    - git
+    - zsh
+    - vim
+  args:
+    chdir: /home/vagrant/dotfiles
+  become: yes
+  become_user: vagrant
+
+- name: get oh-my-zsh
+  git: repo=https://github.com/robbyrussell/oh-my-zsh.git
+       dest=/home/vagrant/.oh-my-zsh
+  become: yes
+  become_user: vagrant
+
+- name: enable zsh
+  shell: 'sudo chsh -s $(which zsh) vagrant'
+  become: yes
+  become_user: vagrant
+
+- name: install pipsi
+  shell: 'curl https://raw.githubusercontent.com/mitsuhiko/pipsi/master/get-pipsi.py | python'
+  args:
+    creates: /home/vagrant/.local/bin/pipsi
+  become: yes
+  become_user: vagrant
+
+- name: install Vundle
+  git: repo=https://github.com/gmarik/Vundle.vim.git
+       dest=/home/vagrant/.vim/bundle/Vundle.vim
+  become: yes
+  become_user: vagrant
+
+- name: get bib-api
+  git: repo=https://github.com/xsteadfastx/bib-api.git
+       dest=/home/vagrant/bib-api
+  become: yes
+  become_user: vagrant
+
+- name: install deps
+  pip: name={{ item }}
+       virtualenv=/home/vagrant/bib-api/env
+       virtualenv_command="virtualenv -p /usr/bin/python3"
+  with_items:
+    - bottle
+    - selenium
+    - pytest
+  become: yes
+  become_user: vagrant

@@ -1,0 +1,8 @@
+---
+- name: clone repo
+  git: repo="https://github.com/xsteadfastx/bib-api.git"
+       dest="/srv/bib-api"
+
+- name: install deps
+  pip: requirements="/srv/bib-api/requirements.txt"
+       executable=pip3

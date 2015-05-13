@@ -1,0 +1,9 @@
+---
+- name: setup
+  hosts: all
+  sudo: true
+
+  roles:
+    - common
+    - phantomjs
+    - dev_env

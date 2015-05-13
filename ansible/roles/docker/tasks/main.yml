@@ -1,0 +1,30 @@
+---
+- name: create temp dir
+  file: path="/tmp/bib-api"
+        state=directory
+
+- name: copy Dockerfile
+  copy: src=Dockerfile
+        dest="/tmp/bib-api/Dockerfile"
+
+- name: copy ansible dir
+  copy: src="../../../../ansible"
+        dest="/tmp/bib-api/ansible"
+
+- name: bib-api image
+  docker_image: path="/tmp/bib-api"
+                name="xsteadfastx/bib-api"
+                state=build
+
+- name: delete temp dir
+  file: path="/tmp/bib-api"
+        state=absent
+
+- name: bib-api container
+  docker:
+    name: bib-api
+    image: xsteadfastx/bib-api
+    command: python3 /srv/bib-api/run.py
+    state: reloaded
+    ports:
+      - "127.0.0.1:9999:5000"

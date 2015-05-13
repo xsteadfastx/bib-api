@@ -1,0 +1,9 @@
+---
+- name: docker provision
+  hosts: all
+  sudo: true
+
+  roles:
+    - common
+    - phantomjs
+    - bib-api
