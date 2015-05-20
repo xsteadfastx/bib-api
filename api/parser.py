@@ -46,7 +46,11 @@ def search_results(source):
             available = True
 
         # convert year to a date object
-        year = date(int(cols[5].text.strip()), 1, 1)
+        if not cols[5].text.strip():
+            year = None
+
+        else:
+            year = date(int(cols[5].text.strip()), 1, 1)
 
         # extract media type
         img = cols[2].find('img')

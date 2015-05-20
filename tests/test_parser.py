@@ -29,6 +29,24 @@ def test_search_results_nothing_found():
     assert rv == []
 
 
+def test_search_results_item_without_year():
+    with open('tests/files/search_results_python.html', 'r',
+              encoding='utf-8') as f:
+        rv = parser.search_results(f)
+
+    assert rv[0][-1].year is None
+    assert rv[0][-1].type == 'Mehrbändiges Werk'
+    assert rv[0][-1].name == ('Monty Python\'s Flying Circus : '
+                              'sämtliche Worte / Graham Chapman ... - '
+                              'Haffmans')
+
+    assert rv[0][0].year == date(1992, 1, 1)
+    assert rv[0][0].name == ('¬Das¬ Leben Brians : Drehbuch und '
+                             'apokryphe Szenen / Monty Python. - '
+                             'Dt. Erstausg. - Haffmans')
+    assert rv[0][0].available is True
+
+
 def test_rent_list():
     with open('tests/files/rent_list.html', 'r', encoding='utf-8') as f:
         rv = parser.rent_list(f)
@@ -42,7 +60,5 @@ def test_rent_list():
     assert rv[0].name == name
 
     assert rv[0].from_date == date(2015, 4, 9)
-
     assert rv[0].till_date == date(2015, 6, 5)
-
     assert rv[0].notes == '1 Verlängerung'
