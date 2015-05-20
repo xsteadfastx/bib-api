@@ -5,7 +5,8 @@ from api import browser
 
 
 class SearchResultSchema(Schema):
-    '''The schema for the search results items. Needed for the serialization.'''
+    '''The schema for the search results items.
+    Needed for the serialization.'''
     name = fields.String()
     available = fields.Boolean()
     year = fields.Date()

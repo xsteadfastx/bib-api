@@ -58,3 +58,6 @@ target/
 
 # own stuff
 .vagrant
+junit-*.xml
+pep8.out
+pylint.out
