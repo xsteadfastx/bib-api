@@ -55,13 +55,18 @@
   become: yes
   become_user: vagrant
 
-- name: install deps
+- name: install deps from requirements.txt
+  pip: requirements=/home/vagrant/bib-api/requirements.txt
+       virtualenv=/home/vagrant/bib-api/env
+       virtualenv_command="virtualenv -p /usr/bin/python3"
+  become: yes
+  become_user: vagrant
+
+- name: install other deps
   pip: name={{ item }}
        virtualenv=/home/vagrant/bib-api/env
        virtualenv_command="virtualenv -p /usr/bin/python3"
   with_items:
-    - bottle
-    - selenium
     - pytest
   become: yes
   become_user: vagrant
