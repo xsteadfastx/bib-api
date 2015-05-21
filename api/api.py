@@ -1,7 +1,32 @@
 # -*- coding: utf-8 -*-
-from bottle import route, request, run
+from bottle import Bottle, request
 from marshmallow import Schema, fields
 from api import browser
+
+app = Bottle()
+
+DOCUMENTATION_INTRO = '''
+<h1>Stadtbibliothek Nürnberg API</h1>
+<p>For rolling your own API or help developing it,
+check <a href="https://github.com/xsteadfastx/bib-api">GitHub</a>.</p>
+'''
+
+
+@app.route('/')
+def index():
+    '''The documentation page.'''
+    documentation = DOCUMENTATION_INTRO
+    documentation += '<table id="api-endpoints"><tbody>\n'
+    documentation += ('<tr>'
+                      '<th style="text-align: left">Endpoint</th>'
+                      '<th style="text-align: left">Method</th>'
+                      '<th style="text-align: left">Description</th>\n')
+    for route in app.routes:
+        documentation += '\n<tr><td>' + route.rule + '</td><td>' + route.method + '</td><td>' + str(
+            route.callback.__doc__) + '</td></tr>'
+    documentation += '</tbody></table>'
+
+    return documentation
 
 
 class SearchResultSchema(Schema):
@@ -17,8 +42,10 @@ class SearchPostSchema(Schema):
     name = fields.String(required=True)
 
 
-@route('/api/search', method='POST')
+@app.route('/api/search', method='POST')
 def search():
+    '''Returns searched items.
+    Example: `http POST /api/search name='python'`'''
     data = SearchPostSchema().load(request.json)
 
     if data.errors:
@@ -46,8 +73,10 @@ class RentPostSchema(Schema):
     password = fields.String(required=True)
 
 
-@route('/api/rented', method='POST')
+@app.route('/api/rented', method='POST')
 def rented():
+    '''Returns rented items.
+    Example: `http POST /api/rented cardnumber='B12345' password='pass'`'''
     data = RentPostSchema().load(request.json)
 
     if data.errors:
