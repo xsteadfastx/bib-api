@@ -22,8 +22,9 @@ def index():
                       '<th style="text-align: left">Method</th>'
                       '<th style="text-align: left">Description</th>\n')
     for route in app.routes:
-        documentation += '\n<tr><td>' + route.rule + '</td><td>' + route.method + '</td><td>' + str(
-            route.callback.__doc__) + '</td></tr>'
+        documentation += (
+            '\n<tr><td>' + route.rule + '</td><td>' + route.method +
+            '</td><td>' + str(route.callback.__doc__) + '</td></tr>')
     documentation += '</tbody></table>'
 
     return documentation
