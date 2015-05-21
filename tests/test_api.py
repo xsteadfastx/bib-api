@@ -1,17 +1,22 @@
 from api import api
 from unittest.mock import patch
+from webtest import TestApp
 import pickle
+import pytest
 
 
-@patch('api.api.request')
+@pytest.fixture
+def app():
+    return TestApp(api.app)
+
+
 @patch('api.api.browser.rent_list')
-def test_rented(mock_api_browser, mock_api_request):
-    mock_api_request.json = dict(cardnumber='B123456', password='123456')
-
+def test_rented(mock_api_browser, app):
     with open('tests/files/rent_list_results.p', 'rb') as f:
         mock_api_browser.return_value = pickle.load(f)
 
-    rv = api.rented()
+    rv = app.post_json('/api/rented',
+                       dict(cardnumber='B123456', password='123456')).json
 
     assert len(rv['results']) == 7
 
@@ -28,15 +33,18 @@ def test_rented(mock_api_browser, mock_api_request):
     assert rv['results'][0] == expected
 
 
-@patch('api.api.request')
-@patch('api.api.browser.search')
-def test_search_found_items(mock_api_browser, mock_api_request):
-    mock_api_request.json = dict(name='batman')
+def test_rented_no_password(app):
+    rv = app.post_json('/api/rented', dict(cardnumber='B123456')).json
 
+    assert rv == {'errors': {'password': ['Missing data for required field.']}}
+
+
+@patch('api.api.browser.search')
+def test_search_found_items(mock_api_browser, app):
     with open('tests/files/search_results_batman.p', 'rb') as f:
         mock_api_browser.return_value = pickle.load(f)
 
-    rv = api.search()
+    rv = app.post_json('/api/search', dict(name='batman')).json
 
     assert len(rv['results']) == 110
 
@@ -54,14 +62,11 @@ def test_search_found_items(mock_api_browser, mock_api_request):
     assert rv['results'][0] == expected
 
 
-@patch('api.api.request')
 @patch('api.api.browser.search')
-def test_search_nothing_found(mock_api_browser, mock_api_request):
-    mock_api_request.json = dict(name='foobar')
-
+def test_search_nothing_found(mock_api_browser, app):
     with open('tests/files/search_results_foobar.p', 'rb') as f:
         mock_api_browser.return_value = pickle.load(f)
 
-    rv = api.search()
+    rv = app.post_json('/api/search', dict(name='foobar')).json
 
     assert rv['results'] == []
