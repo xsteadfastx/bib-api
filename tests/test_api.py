@@ -31,7 +31,7 @@ def test_rented(mock_api_browser, mock_api_request):
 @patch('api.api.request')
 @patch('api.api.browser.search')
 def test_search_found_items(mock_api_browser, mock_api_request):
-    mock_api_request.json = dict(search='batman')
+    mock_api_request.json = dict(name='batman')
 
     with open('tests/files/search_results_batman.p', 'rb') as f:
         mock_api_browser.return_value = pickle.load(f)
@@ -57,7 +57,7 @@ def test_search_found_items(mock_api_browser, mock_api_request):
 @patch('api.api.request')
 @patch('api.api.browser.search')
 def test_search_nothing_found(mock_api_browser, mock_api_request):
-    mock_api_request.json = dict(search='foobar')
+    mock_api_request.json = dict(name='foobar')
 
     with open('tests/files/search_results_foobar.p', 'rb') as f:
         mock_api_browser.return_value = pickle.load(f)

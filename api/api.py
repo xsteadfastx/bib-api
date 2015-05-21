@@ -14,7 +14,7 @@ class SearchResultSchema(Schema):
 
 
 class SearchPostSchema(Schema):
-    search = fields.String(required=True)
+    name = fields.String(required=True)
 
 
 @route('/api/search', method='POST')
@@ -24,7 +24,7 @@ def search():
     if data.errors:
         return dict(error=data.errors)
 
-    results = browser.search(data.data['search'])
+    results = browser.search(data.data['name'])
 
     # serialize the data
     schema = SearchResultSchema(many=True)
