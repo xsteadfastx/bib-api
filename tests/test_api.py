@@ -70,3 +70,15 @@ def test_search_nothing_found(mock_api_browser, app):
     rv = app.post_json('/api/search', dict(name='foobar')).json
 
     assert rv['results'] == []
+
+
+@patch('api.browser.browser_login')
+@patch('api.browser.webdriver')
+def test_foo(mock_source, mock_login, app):
+    with open('tests/files/rent_list_none.html', 'r', encoding='utf-8') as f:
+        mock_source.PhantomJS().page_source = f.read()
+
+    rv = app.post_json('/api/rented',
+                       dict(cardnumber='B123456', password='123456')).json
+
+    assert rv['results'] == []

@@ -27,6 +27,9 @@ def rent_list(cardnumber, password):
     browser_login(browser, cardnumber, password)
 
     # get rentlist
+    if 'Keine Ausleihen' in browser.page_source:
+        return []
+
     browser.find_element_by_link_text(
         'Ausleihen zeigen oder verlängern').click()
 
