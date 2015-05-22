@@ -46,7 +46,7 @@ class SearchPostSchema(Schema):
 @app.route('/api/search', method='POST')
 def search():
     '''Returns searched items.
-    Example: `http POST /api/search name='python'`'''
+    Example: `http POST :/api/search name='python'`'''
     data = SearchPostSchema().load(request.json)
 
     if data.errors:
@@ -77,7 +77,7 @@ class RentPostSchema(Schema):
 @app.route('/api/rented', method='POST')
 def rented():
     '''Returns rented items.
-    Example: `http POST /api/rented cardnumber='B12345' password='pass'`'''
+    Example: `http POST :/api/rented cardnumber='B12345' password='pass'`'''
     data = RentPostSchema().load(request.json)
 
     if data.errors:
