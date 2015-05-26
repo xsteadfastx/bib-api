@@ -24,6 +24,10 @@ def search_results(source):
     # making soup out of the page source
     soup = BeautifulSoup(source)
 
+    for i in soup.find_all('h1'):
+        if 'Vollanzeige' in i.text.rstrip():
+            return [item(source)], False
+
     # find all table items
     rows = soup.find_all('tr', class_=re.compile('rTable_tr_.*'))
 
@@ -65,6 +69,35 @@ def search_results(source):
         next_page = False
 
     return page_results, next_page
+
+
+def item(source):
+    soup = BeautifulSoup(source)
+
+    # parse first table
+    table = soup.find(
+        'table', summary='Auflistung der Kategorien des ausgewählten Treffers')
+    rows = table.find_all('td')
+
+    # extract media type
+    img = rows[0].find('img')
+    type = img['alt']
+
+    name = rows[1].text
+
+    parsed_year = re.search(r'\d\d\d\d', rows[3].text).group()
+    year = date(int(parsed_year), 1, 1)
+
+    # parse second table
+    table = soup.find('table', class_='rTable_table')
+    rows = table.find_all('td')
+
+    if 'Verfügbar' in rows[5].text:
+        available = True
+    else:
+        available = False
+
+    return SearchResult(name, available, year, type)
 
 
 class RentResult(object):

@@ -1,7 +1,6 @@
 from api import api
 from unittest.mock import patch
 from webtest import TestApp
-import pickle
 import pytest
 
 
@@ -10,10 +9,11 @@ def app():
     return TestApp(api.app)
 
 
-@patch('api.api.browser.rent_list')
-def test_rented(mock_api_browser, app):
-    with open('tests/files/rent_list_results.p', 'rb') as f:
-        mock_api_browser.return_value = pickle.load(f)
+@patch('api.browser.browser_login')
+@patch('api.browser.webdriver')
+def test_rented_new(mock_source, mock_login, app):
+    with open('tests/files/rent_list.html', 'r', encoding='utf-8') as f:
+        mock_source.PhantomJS().page_source = f.read()
 
     rv = app.post_json('/api/rented',
                        dict(cardnumber='B123456', password='123456')).json
@@ -39,10 +39,11 @@ def test_rented_no_password(app):
     assert rv == {'errors': {'password': ['Missing data for required field.']}}
 
 
-@patch('api.api.browser.search')
-def test_search_found_items(mock_api_browser, app):
-    with open('tests/files/search_results_batman.p', 'rb') as f:
-        mock_api_browser.return_value = pickle.load(f)
+@patch('api.browser.webdriver')
+def test_search_found_items(mock_source, app):
+    with open('tests/files/search_results_batman.html', 'r',
+              encoding='utf-8') as f:
+        mock_source.PhantomJS().page_source = f.read()
 
     rv = app.post_json('/api/search', dict(name='batman')).json
 
@@ -62,23 +63,33 @@ def test_search_found_items(mock_api_browser, app):
     assert rv['results'][0] == expected
 
 
-@patch('api.api.browser.search')
-def test_search_nothing_found(mock_api_browser, app):
-    with open('tests/files/search_results_foobar.p', 'rb') as f:
-        mock_api_browser.return_value = pickle.load(f)
+@patch('api.browser.webdriver')
+def test_search_nothing_found(mock_source, app):
+    with open('tests/files/search_results_foobar.html', 'r',
+              encoding='utf-8') as f:
+        mock_source.PhantomJS().page_source = f.read()
 
     rv = app.post_json('/api/search', dict(name='foobar')).json
 
     assert rv['results'] == []
 
 
-@patch('api.browser.browser_login')
 @patch('api.browser.webdriver')
-def test_foo(mock_source, mock_login, app):
-    with open('tests/files/rent_list_none.html', 'r', encoding='utf-8') as f:
+def test_search_one_item_returned(mock_source, app):
+    '''If there is only one resault a item view is returned and not a list.'''
+    with open('tests/files/search_results_american_splendor.html', 'r',
+              encoding='utf-8') as f:
         mock_source.PhantomJS().page_source = f.read()
 
-    rv = app.post_json('/api/rented',
-                       dict(cardnumber='B123456', password='123456')).json
+    rv = app.post_json('/api/search', dict(name='american splendor')).json
 
-    assert rv['results'] == []
+    assert len(rv['results']) == 1
+
+    expected = {
+        'name': ('American Splendor [DVD] / Paul Giamatti, Hope Davis. Dir. '
+                 'by Robert Pulcini ... '),
+        'year': '2005-01-01',
+        'type': 'DVD-Video/-Audio',
+        'available': True
+    }
+    assert rv['results'][0] == expected
