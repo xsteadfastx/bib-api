@@ -1,12 +1,23 @@
 # -*- coding: utf-8 -*-
-from bottle import Bottle, request
+from bottle import Bottle, request, response, abort
 from marshmallow import Schema, fields
-from api import browser
+from itsdangerous import URLSafeSerializer, BadSignature
+from urllib.parse import urljoin
+from os import environ
+from sys import exit
+
+from api import browser, ical
+
+
+if 'SECRET_KEY' not in environ:
+    exit('no SECRET_KEY environment variable set')
+else:
+    SECRET_KEY = environ['SECRET_KEY']
 
 app = Bottle()
 
 DOCUMENTATION_INTRO = '''
-<h1>Stadtbibliothek Nürnberg API</h1>
+<h1>Unofficial Stadtbibliothek Nürnberg API</h1>
 <p>For rolling your own API or help developing it,
 check <a href="https://github.com/xsteadfastx/bib-api">GitHub</a>.</p>
 '''
@@ -14,7 +25,8 @@ check <a href="https://github.com/xsteadfastx/bib-api">GitHub</a>.</p>
 
 @app.route('/')
 def index():
-    '''The documentation page.'''
+    '''The documentation page.
+    '''
     documentation = DOCUMENTATION_INTRO
     documentation += '<table id="api-endpoints"><tbody>\n'
     documentation += ('<tr>'
@@ -32,7 +44,8 @@ def index():
 
 class SearchResultSchema(Schema):
     '''The schema for the search results items.
-    Needed for the serialization.'''
+    Needed for the serialization.
+    '''
     name = fields.String()
     available = fields.Boolean()
     year = fields.Date()
@@ -46,7 +59,8 @@ class SearchPostSchema(Schema):
 @app.route('/api/search', method='POST')
 def search():
     '''Returns searched items.
-    Example: `http POST :/api/search name='python'`'''
+    <br>Example: `http POST /api/search name='python'`
+    '''
     data = SearchPostSchema().load(request.json)
 
     if data.errors:
@@ -69,7 +83,7 @@ class RentResultSchema(Schema):
     notes = fields.String()
 
 
-class RentPostSchema(Schema):
+class AuthSchema(Schema):
     cardnumber = fields.String(required=True)
     password = fields.String(required=True)
 
@@ -77,8 +91,9 @@ class RentPostSchema(Schema):
 @app.route('/api/rented', method='POST')
 def rented():
     '''Returns rented items.
-    Example: `http POST :/api/rented cardnumber='B12345' password='pass'`'''
-    data = RentPostSchema().load(request.json)
+    <br>Example: `http POST /api/rented cardnumber='B12345' password='pass'`
+    '''
+    data = AuthSchema().load(request.json)
 
     if data.errors:
         return dict(errors=data.errors)
@@ -90,3 +105,43 @@ def rented():
     results = schema.dump(rent_list)
 
     return dict(results=results.data)
+
+
+@app.route('/api/ical-url', method='POST')
+def get_ical_url():
+    '''Returns url for using ical calendar with rented items and return dates.
+    <br>Example: `http POST /api/ical-url cardnumber='B12345' password='pass'`
+    '''
+    data = AuthSchema().load(request.json)
+
+    if data.errors:
+        return dict(errors=data.errors)
+
+    s = URLSafeSerializer(SECRET_KEY)
+
+    base = '{}://{}'.format(request.urlparts.scheme, request.urlparts.netloc)
+
+    url = urljoin(base, 'ical/rented.ics?token={}'.format(s.dumps(data)))
+
+    return dict(url=url)
+
+
+@app.route('/ical/rented.ics', method='GET')
+def rented_ical():
+    if 'token' not in request.query.dict.keys():
+        return dict(errors='no token')
+
+    try:
+        s = URLSafeSerializer(SECRET_KEY)
+        data = s.loads(request.query.dict['token'][0])[0]
+
+        ical_file = ical.build_ical(data['cardnumber'], data['password'])
+
+        response.set_header('Content-type', 'text/calendar')
+        return ical_file
+
+    except BadSignature:
+        abort(401)
+
+    except:
+        abort(500)

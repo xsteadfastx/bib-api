@@ -1,5 +1,6 @@
-from api import parser
 from datetime import date
+
+from api import parser
 
 
 def test_search_results_items_found():

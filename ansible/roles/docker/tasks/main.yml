@@ -28,3 +28,5 @@
     state: reloaded
     ports:
       - "127.0.0.1:9999:5000"
+    env:
+      SECRET_KEY: {{ secret_key }}

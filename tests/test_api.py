@@ -1,7 +1,11 @@
-from api import api
 from unittest.mock import patch
 from webtest import TestApp
+from itsdangerous import URLSafeSerializer
+from os import environ
 import pytest
+
+from api import api
+from api.api import AuthSchema
 
 
 @pytest.fixture
@@ -11,7 +15,7 @@ def app():
 
 @patch('api.browser.browser_login')
 @patch('api.browser.webdriver')
-def test_rented_new(mock_source, mock_login, app):
+def test_rented(mock_source, mock_login, app):
     with open('tests/files/rent_list.html', 'r', encoding='utf-8') as f:
         mock_source.PhantomJS().page_source = f.read()
 
@@ -93,3 +97,15 @@ def test_search_one_item_returned(mock_source, app):
         'available': True
     }
     assert rv['results'][0] == expected
+
+
+def test_ical_url(app):
+    data = {'password': '123456', 'cardnumber': 'B123456'}
+
+    rv = app.post_json('/api/ical-url', data).json
+
+    s = URLSafeSerializer(environ['SECRET_KEY'])
+    token = s.dumps(AuthSchema().load(data))
+
+    assert rv == dict(
+        url='http://localhost:80/ical/rented.ics?token={}'.format(token))
