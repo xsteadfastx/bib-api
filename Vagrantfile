@@ -60,6 +60,7 @@ Vagrant.configure(2) do |config|
       d.has_ssh = true
   end
   config.ssh.port = 22
+  config.ssh.forward_agent = true
 
   # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
   # such as FTP and Heroku are also available. See the documentation at
@@ -80,6 +81,7 @@ Vagrant.configure(2) do |config|
     ansible.playbook = "ansible/vagrant.yml"
     ansible.limit = "all"
     ansible.verbose = "v"
+    ansible.host_key_checking = false
   end
 
 end
