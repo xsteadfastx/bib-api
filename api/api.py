@@ -128,6 +128,10 @@ def get_ical_url():
 
 @app.route('/ical/rented.ics', method='GET')
 def rented_ical():
+    '''Returns a ical file with all return dates for the rented items.
+    Needs a token argument. Use the '/api/ical-url' endpoint for getting the
+    full url.
+    '''
     if 'token' not in request.query.dict.keys():
         return dict(errors='no token')
 

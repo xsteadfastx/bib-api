@@ -7,6 +7,7 @@
     - stow
     - vim
     - python-virtualenv
+    - python-dev
 
 - name: get dotfiles
   git: repo=https://github.com/xsteadfastx/dotfiles.git
