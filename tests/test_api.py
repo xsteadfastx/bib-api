@@ -1,16 +1,8 @@
 from unittest.mock import patch
-from webtest import TestApp
 from itsdangerous import URLSafeSerializer
 from os import environ
-import pytest
 
-from api import api
 from api.api import AuthSchema
-
-
-@pytest.fixture
-def app():
-    return TestApp(api.app)
 
 
 @patch('api.browser.browser_login')

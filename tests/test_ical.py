@@ -1,17 +1,20 @@
 from unittest.mock import patch
 from ics import Calendar
-from test_api import app
 
 
 @patch('api.browser.browser_login')
 @patch('api.browser.webdriver')
-def test_ical(mock_source, mock_login, app):
+def test_ical(mock_source, mock_login, app, redis_conn):
     with open('tests/files/rent_list.html', 'r', encoding='utf-8') as f:
         mock_source.PhantomJS().page_source = f.read()
 
     data = {'password': '123456', 'cardnumber': 'B123456'}
 
     url = app.post_json('/api/ical-url', data).json['url']
+    token = url.split('=')[1]
+
+    # check redis if its empty
+    assert redis_conn.hgetall(token) == {}
 
     rv = app.get(url)
 
@@ -40,4 +43,18 @@ def test_ical(mock_source, mock_login, app):
                    '- Renaissance / Sonia Servida7.034.1 Ren01195048\n'
                    '- Barock / Claudia Zanlungo ; Daniela Tarabra7.034.7 '
                    'Bar01210576')
+    assert event.description == description
+
+    # check if redis is filled
+    rv = redis_conn.hgetall(token)
+
+    assert rv != {}
+
+    cal = Calendar(rv[b'ical'].decode('utf-8'))
+
+    assert len(cal.events) == 1
+
+    event = cal.events[0]
+
+    assert event.name == 'Bibliothekrueckgabe: 7 Teile'
     assert event.description == description
