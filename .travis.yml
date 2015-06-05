@@ -1,13 +1,22 @@
 language: python
+
 python:
-        - "3.4"
+  - "3.4"
+
 env:
-        - TOXENV=py34
-        - TOXENV=flake8
+  - TOXENV=py34
+  - TOXENV=flake8
+
 before_install:
-        - "travis_retry pip install coveralls || true"
+  - "travis_retry pip install coveralls || true"
+
 install:
-        - travis_retry pip install tox
+  - travis_retry pip install tox
+
+services:
+  - redis-server
+
 script: tox -e $TOXENV
+
 after_success:
-        - "coveralls || true"
+  - "coveralls || true"

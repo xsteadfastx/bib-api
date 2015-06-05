@@ -1,4 +1,8 @@
 ---
+- name: delete temp dir
+  file: path="/tmp/bib-api"
+        state=absent
+
 - name: create temp dir
   file: path="/tmp/bib-api"
         state=directory
@@ -20,13 +24,22 @@
   file: path="/tmp/bib-api"
         state=absent
 
+- name: redis container
+  docker:
+    name: bib-api-redis
+    image: redis
+    state: started
+
 - name: bib-api container
   docker:
     name: bib-api
     image: xsteadfastx/bib-api
     command: python3 /srv/bib-api/run.py
     state: reloaded
+    links:
+      - "bib-api-redis:redis"
     ports:
       - "127.0.0.1:9999:5000"
     env:
       SECRET_KEY: "{{ secret_key }}"
+      REDIS_HOST: "redis"

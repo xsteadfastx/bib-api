@@ -5,15 +5,24 @@ from itsdangerous import URLSafeSerializer, BadSignature
 from urllib.parse import urljoin
 from os import environ
 from sys import exit
+import datetime
+import redis
 
 from api import browser, ical
 
 
+# check for some environment variables
 if 'SECRET_KEY' not in environ:
     exit('no SECRET_KEY environment variable set')
 else:
     SECRET_KEY = environ['SECRET_KEY']
 
+if 'REDIS_HOST' not in environ:
+    exit('no REDIS_HOST environment variable set')
+else:
+    REDIS_HOST = environ['REDIS_HOST']
+
+# define app
 app = Bottle()
 
 DOCUMENTATION_INTRO = '''
@@ -136,12 +145,36 @@ def rented_ical():
         return dict(errors='no token')
 
     try:
+        # set response header type
+        response.set_header('Content-type', 'text/calendar')
+
+        # get token from request query
+        token = request.query.dict['token'][0]
+
+        # check token. throws a exception if something is wrong with the token
         s = URLSafeSerializer(SECRET_KEY)
-        data = s.loads(request.query.dict['token'][0])[0]
+        data = s.loads(token)[0]
+
+        # check if there is a redis entry for the token
+        r = redis.StrictRedis(host=REDIS_HOST)
+
+        redis_entry = r.hgetall(token)
+        if redis_entry:
+            two_hours_ago = datetime.datetime.utcnow() - datetime.timedelta(
+                hours=2)
+            updated = datetime.datetime.strptime(
+                redis_entry[b'updated'].decode('utf-8'),
+                '%Y-%m-%d %H:%M:%S.%f')
+
+            if updated > two_hours_ago:
+                return redis_entry[b'ical'].decode('utf-8')
 
         ical_file = ical.build_ical(data['cardnumber'], data['password'])
 
-        response.set_header('Content-type', 'text/calendar')
+        # store ical_file in redis
+        r.hmset(token, dict(ical=ical_file,
+                            updated=datetime.datetime.utcnow()))
+
         return ical_file
 
     except BadSignature:

@@ -8,6 +8,7 @@
     - vim
     - python-virtualenv
     - python-dev
+    - redis-server
 
 - name: get dotfiles
   git: repo=https://github.com/xsteadfastx/dotfiles.git
@@ -71,3 +72,6 @@
     - pytest
   become: yes
   become_user: vagrant
+
+- name: add redis to /etc/hosts
+  lineinfile: dest=/etc/hosts line='127.0.0.1 redis'
