@@ -6,7 +6,8 @@ import pytest
 def pytest_configure(config):
     os.environ['PYTHONPATH'] = ':'.join(sys.path)
     os.environ['SECRET_KEY'] = 'secretkey'
-    os.environ['REDIS_HOST'] = 'localhost'
+    if 'REDIS_HOST' not in os.environ.keys():
+        os.environ['REDIS_HOST'] = 'localhost'
 
 
 @pytest.fixture
