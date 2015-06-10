@@ -145,8 +145,8 @@ def rented_ical():
         return dict(errors='no token')
 
     try:
-        # set response header type
-        response.set_header('Content-type', 'text/calendar')
+        # set response header type and charset
+        response.set_header('Content-type', 'text/calendar; charset=UTF-8')
 
         # get token from request query
         token = request.query.dict['token'][0]

@@ -19,6 +19,7 @@ def test_ical(mock_source, mock_login, app, redis_conn):
     rv = app.get(url)
 
     assert rv.content_type == 'text/calendar'
+    assert rv.charset == 'UTF-8'
 
     cal = Calendar(rv.body.decode('utf-8'))
 
