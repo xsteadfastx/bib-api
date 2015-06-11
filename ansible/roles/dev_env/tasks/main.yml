@@ -71,5 +71,6 @@
   with_items:
     - pytest
     - tox
+    - webtest
   become: yes
   become_user: vagrant
