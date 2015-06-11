@@ -56,8 +56,9 @@ Vagrant.configure(2) do |config|
   # information on available options.
 
   config.vm.provider "docker" do |d|
-      d.build_dir = "."
+      d.build_dir = "./vagrant"
       d.has_ssh = true
+      d.create_args = ["--add-host=redis:127.0.0.1"]
   end
   config.ssh.port = 22
   config.ssh.forward_agent = true

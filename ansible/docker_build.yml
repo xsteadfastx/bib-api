@@ -1,6 +1,0 @@
----
-- name: docker build
-  hosts: localhost
-
-  roles:
-    - docker

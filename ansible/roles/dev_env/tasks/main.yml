@@ -70,8 +70,6 @@
        virtualenv_command="virtualenv -p /usr/bin/python3"
   with_items:
     - pytest
+    - tox
   become: yes
   become_user: vagrant
-
-- name: add redis to /etc/hosts
-  lineinfile: dest=/etc/hosts line='127.0.0.1 redis'

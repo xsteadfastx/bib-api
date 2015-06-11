@@ -17,10 +17,10 @@ if 'SECRET_KEY' not in environ:
 else:
     SECRET_KEY = environ['SECRET_KEY']
 
-if 'REDIS_HOST' not in environ:
-    exit('no REDIS_HOST environment variable set')
+if 'REDIS_PORT_6379_TCP_ADDR' not in environ:
+    exit('no REDIS_PORT_6379_TCP_ADDR environment variable set')
 else:
-    REDIS_HOST = environ['REDIS_HOST']
+    REDIS_HOST = environ['REDIS_PORT_6379_TCP_ADDR']
 
 # define app
 app = Bottle()

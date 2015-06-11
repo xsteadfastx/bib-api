@@ -2,5 +2,9 @@
 [![Build Status](https://travis-ci.org/xsteadfastx/bib-api.svg?branch=master)](https://travis-ci.org/xsteadfastx/bib-api)
 [![Coverage Status](https://coveralls.io/repos/xsteadfastx/bib-api/badge.svg?branch=master)](https://coveralls.io/r/xsteadfastx/bib-api?branch=master)
 
+Unofficial Stadtbibliothek Nürnberg API
+
 ## deploy
-`ansible-playbook -i ansible/hosts ansible/docker_build.yml -c local --extra-vars "secret_key=mynicesecretkey"`
+1. `git clone https://github.com/xsteadfastx/bib-api.git`
+2. `cd bib-api`
+3. `docker-compose up -d`

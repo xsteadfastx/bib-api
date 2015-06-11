@@ -1,0 +1,11 @@
+api:
+  build: .
+  links:
+    - redis
+  ports:
+    - "127.0.0.1:9999:5000"
+  environment:
+    - SECRET_KEY=secret_key
+
+redis:
+  image: redis
