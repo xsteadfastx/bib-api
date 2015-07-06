@@ -10,7 +10,8 @@ thats the most easiest way to get everything up and running. it will get redis a
 
 1. `git clone https://github.com/xsteadfastx/bib-api.git`
 2. `cd bib-api`
-3. `docker-compose up -d`
+3. `docker-compose build`
+4. `docker-compose up -d`
 
 ## manual
 
