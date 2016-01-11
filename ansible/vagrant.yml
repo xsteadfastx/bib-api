@@ -1,9 +1,10 @@
 ---
 - name: setup
   hosts: all
-  sudo: true
+  become: yes
 
   roles:
     - common
     - phantomjs
+    - miniconda
     - dev_env

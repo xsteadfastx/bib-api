@@ -1,7 +1,7 @@
 ---
 - name: docker provision
   hosts: all
-  sudo: true
+  become: yes
 
   roles:
     - common

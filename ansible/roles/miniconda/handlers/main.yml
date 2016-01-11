@@ -1,0 +1,5 @@
+---
+- name: remove miniconda install script
+  file:
+    name=/tmp/miniconda.sh
+    state=absent

@@ -1,0 +1,12 @@
+---
+- name: download miniconda
+  get_url:
+    url: https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86.sh
+    dest: /tmp/miniconda.sh
+    mode: 0755
+
+- name: install miniconda
+  become: no
+  shell: bash /tmp/miniconda.sh -b -f
+  notify:
+    - remove miniconda install script
