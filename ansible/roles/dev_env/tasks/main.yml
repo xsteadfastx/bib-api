@@ -4,9 +4,21 @@
   with_items:
     - git
     - python3
-    - ansible
     - redis-server
     - tree
+
+- name: create ansible environment
+  become: no
+  command: ~/miniconda3/bin/conda create -n ansible python=2.7 --yes
+  args:
+    creates: ~/miniconda3/envs/ansible
+
+- name: install ansible
+  become: no
+  pip:
+    name=ansible
+    executable=~/miniconda3/envs/ansible/bin/pip
+    state=present
 
 - name: clone batcave
   become: no
@@ -17,7 +29,7 @@
 - name: run batcave
   become: no
   command:
-    ansible-playbook -i hosts base.yml -c local
+    ~/miniconda3/envs/ansible/bin/ansible-playbook -i hosts base.yml -c local --extra-vars="hosts=localhost"
     chdir=~/batcave
 
 - name: create conda environment

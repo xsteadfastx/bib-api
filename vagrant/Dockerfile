@@ -1,17 +1,16 @@
 FROM 32bit/ubuntu:14.04
 
-RUN apt-get update
+ENV LANG C.UTF-8
+RUN locale-gen de_DE.UTF-8
 
-RUN apt-get install -y openssh-server
+RUN apt-get update \
+ && apt-get install -y openssh-server
 
-EXPOSE 22
-
-RUN mkdir -p /var/run/sshd
-RUN chmod 0755 /var/run/sshd
+RUN mkdir -p /var/run/sshd \
+ && chmod 0755 /var/run/sshd
 
 # Create and configure vagrant user
 RUN useradd --create-home -s /bin/bash vagrant
-WORKDIR /home/vagrant
 
 # Configure SSH access
 RUN mkdir -p /home/vagrant/.ssh
@@ -22,5 +21,5 @@ RUN echo -n 'vagrant:vagrant' | chpasswd
 # Enable passwordless sudo for the "vagrant" user
 RUN echo 'vagrant ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/vagrant
 
-
+EXPOSE 22
 CMD /usr/sbin/sshd -D -o UseDNS=no -o UsePAM=no

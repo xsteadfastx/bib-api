@@ -10,12 +10,21 @@ def pytest_configure(config):
         os.environ['REDIS_PORT_6379_TCP_ADDR'] = 'localhost'
 
 
-@pytest.fixture
+@pytest.yield_fixture
 def app():
-    from api import api
-    from webtest import TestApp
+    from app.app import create_app
 
-    return TestApp(api.app)
+    app = create_app('test.cfg')
+    ctx = app.app_context()
+    ctx.push()
+    yield app
+    ctx.pop()
+
+
+@pytest.yield_fixture
+def client(app):
+    with app.test_client() as client:
+        yield client
 
 
 @pytest.yield_fixture
@@ -23,5 +32,7 @@ def redis_conn():
     import redis
 
     r = redis.StrictRedis(host=os.environ['REDIS_PORT_6379_TCP_ADDR'])
+
     yield r
+
     r.flushall()

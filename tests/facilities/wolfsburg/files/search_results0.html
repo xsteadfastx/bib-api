@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2002/REC-xhtml1-20020801/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de"><head>
+<meta http-equiv="Content-type" content="text/html;charset=iso-8859-1">
+<title>Web-OPAC V3.0.0.8477</title>
+
+<link href="style.css.asp" rel="stylesheet" type="text/css">
+
+
+</head>
+ <body>
+ <script src="jquery-1.7.2.min.js" type="text/javascript"></script>
+ 
+  
+ 
+ <script type="text/javascript">
+    var EU_LAW_INFO_COOKIE = 'EU_LAW_INFO';
+    function setCookie(c_name,value,exdays)
+	{
+	var exdate=new Date();
+	exdate.setDate(exdate.getDate() + exdays);
+	var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString())+"; path=/";
+	document.cookie=c_name + "=" + c_value;
+	}
+    function setlocalcookie() {
+     setCookie(EU_LAW_INFO_COOKIE, true,3650);
+     $("#CookieAcknowledgeInfo").hide();          
+	}
+</script>
+		
+<div id="CookieAcknowledgeInfo" style="display: block;z-index:1001;height:32;width:100%;position:fixed;bottom:0;left:0;background:rgba(213,213,213,0.85);">
+<div class="CookieAcknowledgeMessage" style="float:left;font-size:small;">
+<p style="float:left;font-size:small;padding-top:3px;">Diese Seite verwendet Cookies.</p>
+</div>  
+<div class="CookieDetailsLink" style="float:left;margin-left:10px;margin-right:10px">
+<p><a style="font-size:small;" href="CookieLaw/CookieLaw_Sprache1.htm" target="_blank">Details anzeigen</a></p>
+</div>
+<div class="CookieAcknowledgeImage" style="float:left;margin-right:10px">
+    <input type="image" id="CookieAcknowledgeImage" onclick="setlocalcookie()" src="./Images/false.png" style="width:20px;heigth:20px; padding-top:16px;">
+</div>
+</div>
+
+
+<form action="index.asp" name="webopac" id="webopac" method="post">
+
+
+
+<div class="maindiv">
+<div class="topmenu"><div id="link_default"><input type="submit" value="" name="default" id="default"></div><div id="link_home"><a href="http://www.wolfsburg.de"><img src="/read/PICS/home.gif" onmouseover="this.src='/read/PICS/home_.gif'" onmouseout="this.src='/read/PICS/home.gif'" alt="Startseite laden"></a></div><div id="link_konto"><input name="link_konto" src="/read/PICS/konto.gif" type="image" onmouseover="this.src='/read/PICS/konto_.gif'" onmouseout="this.src='/read/PICS/konto.gif'" alt="Benutzerkonto"></div><div id="link_mail"><a href="mailto:stadtbibliothek@stadt.wolfsburg.de"><label class="invisible">E-Mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label></a></div><div id="link_info"><input name="link_info" src="/read/PICS/info.gif" type="image" onmouseover="this.src='/read/PICS/info_.gif'" onmouseout="this.src='/read/PICS/info.gif'" alt="Info"></div><div id="link_suchtip"><input name="link_suchtip" src="/read/PICS/suchtip.gif" type="image" onmouseover="this.src='/read/PICS/suchtip_.gif'" onmouseout="this.src='/read/PICS/suchtip.gif'" alt="Suchtipps"></div><div id="link_link"><input name="link_links" src="/read/PICS/links.gif" type="image" onmouseover="this.src='/read/PICS/links_.gif'" onmouseout="this.src='/read/PICS/links.gif'" alt="Link:"></div><div id="link_hilfe"><input name="link_hilfe" src="/read/PICS/hilfe.gif" type="image" onmouseover="this.src='/read/PICS/hilfe_.gif'" onmouseout="this.src='/read/PICS/hilfe.gif'" alt="Hilfe"></div><div id="link_fernanfrage"><input name="link_fernanf" src="/read/PICS/fernleihanfragen.gif" type="image" onmouseover="this.src='/read/PICS/fernleihanfragen_.gif'" onmouseout="this.src='/read/PICS/fernleihanfragen.gif'" alt="Fernleihanfrage an die Bibliothek"></div><div id="link_sprache1"><a href="woload.asp?lkz=1"><img src="/read/PICS/german.gif" onmouseover="this.src='/read/PICS/german_.gif'" onmouseout="this.src='/read/PICS/german.gif'" alt="Deutsch"></a></div><div id="link_sprache2"><a href="woload.asp?lkz=2"><img src="/read/PICS/english.gif" onmouseover="this.src='/read/PICS/english_.gif'" onmouseout="this.src='/read/PICS/english.gif'" alt="Englisch"></a></div></div><div class="suchzeile"><div class="suchfeld"><div class="suchfeldinhalt"><div class="suchfeld_inhalt_titel"><label for="stichwort"><a class="stealth" title="Hilfe" href="index.asp?target=hilfe_stichw">Suchwort</a></label></div>
+<div class="suchfeld_inhalt_input"><input type="text" name="stichwort" id="stichwort" value="batman" size="36" maxlength="248"></div>
+</div></div></div>
+
+
+
+<script type="text/javascript">
+
+
+function verstecken(){
+
+ document.getElementById("warten").style.visibility = "visible";
+ 
+}
+
+function sucheFertig(){
+	document.getElementById("warten").style.visibility = "hidden";
+	
+}
+
+
+
+</script>
+
+
+    
+	<div id="menu_mitte">
+	 
+	
+<script type="text/javascript">
+	function OpenPrintWindow()
+	{
+		
+		win1=window.open("print.asp?whichOne=FIRST","printWindow", "width=400,height=400,innerWidth=400,innerHeight=400,dependent,scrollbars");
+		
+	}
+	</script>
+
+<div class="menu_mitte_katalog">Katalog</div><div class="menu_mitte_katalog">Stadtbibliothek Wolfsburg</div>
+
+	
+	<div class="menu_mitte_links_feld">
+	<input name="suche_starten" src="/read/PICS/b-suche.gif" type="image" onmouseover="this.src='/read/PICS/b-suche_.gif'" onmouseout="this.src='/read/PICS/b-suche.gif'" alt="Suche starten" id="suche_starten">
+	</div>
+
+
+
+
+	<div class="menu_mitte_links_feld">
+		<input name="reset" src="/read/PICS/reset.gif" type="image" onmouseover="this.src='/read/PICS/reset_.gif'" onmouseout="this.src='/read/PICS/reset.gif'" alt="Inhalt der Suchfelder löschen">
+	</div>
+
+    <div class="menu_mitte_rechts_feld"><input name="link_profis" src="/read/PICS/profi.gif" type="image" onmouseover="this.src='/read/PICS/profi_.gif'" onmouseout="this.src='/read/PICS/profi.gif'" alt="Zur Profisuche wechseln"></div><div class="menu_mitte_rechts_feld"><div id="link_drucken"><a href="javascript:OpenPrintWindow();"><img style="margin-top:-3px;" src="/read/PICS/print.gif" onmouseout="this.src='/read/PICS/print.gif'" onmouseover="this.src='/read/PICS/print_.gif'" alt="Drucken"></a></div></div>
+	</div>
+
+    
+		    
+		        <div class="result" id="Result">
+			    
+
+<script type="text/javascript">
+
+function finished()
+{
+	
+				document.images[0].src = "/read/PICS/dummy.gif";	
+			 
+		/*document.images[1].src = "/read/PICS/dummy.gif";	*/
+}
+
+</script>
+<div class="result_titel"><h1>Suchergebnis - Übersicht</h1></div><div class="result_gefunden">Gefunden:&nbsp;43</div><div class="result_sort"><select name="orderselect" onchange="document.webopac.submit();"><option value="">sortieren nach</option>
+<option selected="selected" value="1">Verfasser</option>
+<option value="2">Erscheinungsjahr</option>
+<option value="3">Mediengruppe</option>
+<option value="4">Sachtitel</option>
+</select>&nbsp; </div><div class="clearleft"></div><div class="resultzeile">Sortierrichtung:&nbsp;Aufsteigend&nbsp;&nbsp;<a href="index.asp?order=desc">Absteigend</a></div><table cellpadding="2" cellspacing="0" class="resulttab"><tbody><tr><th class="tabbeschreibung">Trefferbild</th><th class="tabbeschreibung">Treffer Kurzanzeige</th></tr><tr class="result_trefferX"><td><a href="index.asp?detmediennr=0"><img src="/read/PICS/mDVDS.gif" alt="DVD-Medien"></a></td><td><!--MEDIENNR: 0546936 --><a href="index.asp?detmediennr=0 " title="Details öffnen"><b><b>Batman</b></b></a></td></tr><tr class="result_treffer"><td><a href="index.asp?detmediennr=1"><img src="/read/PICS/Blu-Ray--Disc_s_35x35.gif" alt="Blu-Ray-Disc"></a></td><td><!--MEDIENNR: 0529854 --><a href="index.asp?detmediennr=1 " title="Details öffnen"><b><b>Batman</b></b> - Arkham knight [X-BOX ONE] - 2015</a></td></tr><tr class="result_trefferX"><td><a href="index.asp?detmediennr=2"><img src="/read/PICS/Blu-Ray--Disc_s_35x35.gif" alt="Blu-Ray-Disc"></a></td><td><!--MEDIENNR: 0511115 --><a href="index.asp?detmediennr=2 " title="Details öffnen"><b><b>Batman</b></b> - Arkham origins [PS3] - 2013</a></td></tr><tr class="result_treffer"><td><a href="index.asp?detmediennr=3"><img src="/read/PICS/mDVDS.gif" alt="DVD-Medien"></a></td><td><!--MEDIENNR: 0509403 --><a href="index.asp?detmediennr=3 " title="Details öffnen"><b><b>Batman</b></b> - Arkham origins [WiiU] - 2013</a></td></tr><tr class="result_trefferX"><td><a href="index.asp?detmediennr=4"><img src="/read/PICS/mComic1S.gif" alt="Comic, Karikatur"></a></td><td><!--MEDIENNR: 0034783 --><a href="index.asp?detmediennr=4 " title="Details öffnen"><b><b>Batman</b></b> - die Rückkehr des dunklen Ritters Die Rückkehr des dunklen Ritters / Text und Zeichn.: Frank... - 1. Aufl.<br>
+(Comic art) - 1989</a></td></tr><tr class="result_treffer"><td><a href="index.asp?detmediennr=5"><img src="/read/PICS/mBuchS.gif" alt="Buch"></a></td><td><!--MEDIENNR: 0489681 --><a href="index.asp?detmediennr=5 " title="Details öffnen"><b><b>Batman</b></b> : die Welt des dunklen Ritters ; [die offizielle Chronik für über 70 Jahre Comic-Geschichte] / von Daniel Wallace<br>
+(DC) - 2012</a></td></tr><tr class="result_trefferX"><td><a href="index.asp?detmediennr=6"><img src="/read/PICS/mComic1S.gif" alt="Comic, Karikatur"></a></td><td><!--MEDIENNR: 0456986 --><a href="index.asp?detmediennr=6 " title="Details öffnen"><b><b>Batman</b></b> - Ein Tod in der Familie / Autor: Jim Starlin; Zeichner: Jim Aparo - 2010</a></td></tr><tr class="result_treffer"><td><a href="index.asp?detmediennr=7"><img src="/read/PICS/mBmonoS.gif" alt="" border="FALSE"></a></td><td><!--MEDIENNR: 0504634 --><a href="index.asp?detmediennr=7 " title="Details öffnen"><b><b>Batman</b></b> &amp; Robin / <b><b>Batman</b></b> wurde erdacht von Bob Kane.<br>
+(DC-Comics)</a></td></tr><tr class="result_trefferX"><td><a href="index.asp?detmediennr=8"><img src="/read/PICS/mBmonoS.gif" alt="" border="FALSE"></a></td><td><!--MEDIENNR: 0457070 --><a href="index.asp?detmediennr=8 " title="Details öffnen"><b><b>Batman</b></b> / Superman.</a></td></tr><tr class="result_treffer"><td><a href="index.asp?detmediennr=9"><img src="/read/PICS/Blu-Ray--Disc_s_35x35.gif" alt="Blu-Ray-Disc"></a></td><td><!--MEDIENNR: 0461959 --><a href="index.asp?detmediennr=9 " title="Details öffnen"><b><b>Batman</b></b> begins / Regie: Christopher Nolan. Drehb.: David S. Goyer ... Kamera: Wally Pfister. Musik: Hans Zimmer ... Darst.: Christian Bale ; Michael Caine ; Liam... - 2008</a></td></tr></tbody></table><div class="result_nav"><u>1</u>&nbsp; <a href="index.asp?scrollAction=2" title="2">2</a>&nbsp; <a href="index.asp?scrollAction=3" title="3">3</a>&nbsp; <a href="index.asp?scrollAction=4" title="4">4</a>&nbsp; <a href="index.asp?scrollAction=5" title="5">5</a>&nbsp; </div><div class="resultzeile_center">© 2001 - 2013 by <a href="http://www.bond-online.de" target="_blank">OCLC&nbsp;Bibliothekssysteme</a></div>
+			    </div>
+		        <div class="detail" id="Detail"><br>
+<br>
+
+
+<p align="center"> 
+
+<a><span style="font-size:200%">Digitale Angebote der Stadtbibliothek Wolfsburg</span></a>
+
+<br>
+<br>
+<br>
+
+ <a href="http://www3.onleihe.de/wolfsburg" target="_blank"> 
+  <img src="../read/pics/Piktogramme/onleihe.gif" border="0" width="210" height="70" title="Onleihe Wolfsburg">
+ </a>
+
+   &nbsp; &nbsp; &nbsp; 
+
+ <a href="http://www.munzinger.de/search/login?portalid=53744" target="_blank"> 
+  <img src="../read/pics/Piktogramme/munzinger.jpg" border="0" width="150" height="70" title="Munzinger">
+ </a>
+
+<br>
+
+ <a href="http://www.digento.de/login/21099/107576.html" target="_blank"> 
+  <img src="../read/pics/Piktogramme/britannica.jpg" border="0" width="210" height="70" title="Britannica Library">
+ </a>
+
+   &nbsp; &nbsp; &nbsp; 
+
+ <a href="http://www.digento.de/login/21099/104012.html" target="_blank"> 
+  <img src="../read/pics/Piktogramme/library.gif" border="0" width="210" height="40" title="Library Press Display">
+
+   &nbsp; &nbsp; &nbsp; 
+
+ </a><a href="http://www.naxosmusiclibrary.com" target="_blank"> 
+  <img src="../read/pics/Piktogramme/naxos.jpg" border="0" width="130" height="85" title="Naxos Music Library">
+ </a>
+
+<br>
+
+ <a href="https://wolfsburg.mobilopac.de/" target="_blank"> 
+  <img src="../read/pics/Piktogramme/mobil.png" border="0" width="100" height="100" title="Mobil Opac">
+ </a>
+
+   &nbsp; &nbsp; &nbsp; 
+
+ <a href="https://play.google.com/store/apps/details?id=de.opacapp.wolfsburg&amp;hl=de" target="_blank"> 
+  <img src="../read/pics/Piktogramme/android.png" border="0" width="100" height="100" title="Opac Android">
+ </a>
+
+   &nbsp; &nbsp; &nbsp; 
+
+ <a href="https://itunes.apple.com/de/app/stb-wolfsburg/id801007139?mt=8" target="_blank"> 
+  <img src="../read/pics/Piktogramme/ios.png" border="0" width="100" height="100" title="Opac iOS">
+ </a>
+
+<br>
+
+ <a href="https://stadtbibliothekwolfsburg.wordpress.com" target="_blank"> 
+  <img src="../read/pics/Piktogramme/blog.jpg" border="0" width="200" height="70" title="BiblioBlog – Das Weblog der Stadtbibliothek Wolfsburg">
+ </a>
+
+   &nbsp; &nbsp; &nbsp; 
+
+ <a href="https://www.facebook.com/stadtbibliothekwolfsburg?fref=ts" target="_blank"> 
+  <img src="../read/pics/Piktogramme/facebook.jpg" border="0" width="190" height="55" title="Facebook Stadtbibliothek">
+ </a>
+
+ 
+
+
+
+</p>
+
+
+
+</div>
+
+</div>
+</form>
+
+
+
+
+
+</body></html>

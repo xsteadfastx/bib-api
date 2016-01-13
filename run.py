@@ -1,4 +1,5 @@
-from api import api
+from app.app import create_app
 
 
-api.app.run(server='gunicorn', host='0.0.0.0', port=5000)
+app = create_app('dev.cfg')
+app.run(host='0.0.0.0')
