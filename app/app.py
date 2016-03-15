@@ -49,9 +49,7 @@ def create_app(config_filename):
     app.config.from_pyfile(config_filename)
 
     from app.api import api
-    from app.ical import ical
     app.register_blueprint(api)
-    app.register_blueprint(ical)
 
     app.facilities = load_facilities()
 
