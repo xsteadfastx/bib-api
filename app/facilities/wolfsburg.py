@@ -233,3 +233,33 @@ def parse_page_numbers(page_source):
         pages = [int(i.text) for i in pages]
 
     return pages
+
+
+def login(browser, cardnumber, password):
+    """Logs into account.
+
+    Browse to the login form and logs in.
+
+    :param browser: Browser to use.
+    :param cardnumber: Library Cardnumber.
+    :param passowrd: Library Accountpassword
+    :type browser: selenium.webdriver.phantomjs.webdriver.WebDriver
+    :type cardnumber: str
+    :type password: str
+    """
+    entry_url = ('http://webopac.stadt.wolfsburg.de'
+                 '/webopac/index.asp?DB=web_biblio')
+
+    # browse to the login form
+    browser.get(entry_url)
+    browser.find_element_by_name('link_konto').click()
+
+    # fills data and submits
+    browser.find_element_by_id('inputAUSWEIS').send_keys(cardnumber)
+    browser.find_element_by_name('PWD').send_keys(password)
+    browser.find_element_by_name('B1').click()
+
+
+def rent_list(cardnumber, password):
+    browser = create_browser()
+    login(browser, cardnumber, password)
