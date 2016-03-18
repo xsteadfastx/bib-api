@@ -259,6 +259,12 @@ def login(browser, cardnumber, password):
     browser.find_element_by_name('PWD').send_keys(password)
     browser.find_element_by_name('B1').click()
 
+    if "Konto für Ausweis" in browser.page_source:
+        return True
+
+    else:
+        return False
+
 
 def rent_list(cardnumber, password):
     browser = create_browser()

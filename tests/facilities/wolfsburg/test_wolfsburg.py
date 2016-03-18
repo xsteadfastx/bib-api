@@ -2,7 +2,7 @@ from datetime import date
 import pytest
 
 from tests.tools import file_path
-from tests.mockers import MockBrowser
+from tests.mockers import MockBrowserSearch, MockBrowserLogin
 
 from app.facilities import wolfsburg
 
@@ -145,7 +145,8 @@ def test_parse_page_numbers(input, expected):
 
 
 def test_search(monkeypatch):
-    monkeypatch.setattr('app.facilities.wolfsburg.create_browser', MockBrowser)
+    monkeypatch.setattr('app.facilities.wolfsburg.create_browser',
+                        MockBrowserSearch)
 
     item = {
         'title': 'Batman - Arkham knight [X-BOX ONE]',
@@ -172,3 +173,19 @@ def test_search(monkeypatch):
     }
 
     assert wolfsburg.search('batman') == expected
+
+
+@pytest.mark.parametrize('input,expected', [
+    ('account0.html', True),
+    ('account1.html', False)
+])
+def test_login(input, expected):
+    def page_loader():
+        with open(
+            file_path(
+                __file__, 'files', input)) as f:
+            yield f.read()
+
+    browser = MockBrowserLogin(page_loader)
+
+    assert wolfsburg.login(browser, '1234567', '1234567') is expected
