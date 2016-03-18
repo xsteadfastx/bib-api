@@ -24,13 +24,13 @@
   become: no
   git:
     repo=https://github.com/xsteadfastx/batcave.git
-    dest=~/batcave
+    dest=~/.batcave
 
 - name: run batcave
   become: no
   command:
     ~/miniconda3/envs/ansible/bin/ansible-playbook -i hosts base.yml -c local --extra-vars="hosts=localhost"
-    chdir=~/batcave
+    chdir=~/.batcave
 
 - name: create conda environment
   become: no
