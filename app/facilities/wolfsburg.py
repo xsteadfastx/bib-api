@@ -246,6 +246,8 @@ def login(browser, cardnumber, password):
     :type browser: selenium.webdriver.phantomjs.webdriver.WebDriver
     :type cardnumber: str
     :type password: str
+    :return: True if could login or False if it couldnt.
+    :rtype: bool
     """
     entry_url = ('http://webopac.stadt.wolfsburg.de'
                  '/webopac/index.asp?DB=web_biblio')
@@ -267,5 +269,76 @@ def login(browser, cardnumber, password):
 
 
 def rent_list(cardnumber, password):
+    """Gets rent list.
+
+    Logs in a parses the account for rented items.
+
+    :param cardnumber: Library Cardnumber.
+    :param password: Library Accountpassword
+    :return: Dictionary with rented items
+    :rtype: dict
+    """
     browser = create_browser()
     login(browser, cardnumber, password)
+
+    items = parse_rent_list(browser.page_source)
+    saldo = parse_saldo(browser.page_source)
+
+    return {'items': items, 'saldo': saldo}
+
+
+def parse_rent_list(page_source):
+    """Parses rent list.
+
+    :param page_source: HTML page source
+    :type page_source: str
+    :return: List of results.
+    :rtype: list
+    """
+    soup = BeautifulSoup(page_source, 'lxml')
+
+    items = []
+
+    rows = soup.find_all('tr', class_='tabKonto')
+
+    for row in rows:
+        cols = row.find_all('td')
+        cols = [i.text.strip() for i in cols]
+
+        if 'Anzahl' in cols[0]:
+            continue
+
+        item = {}
+
+        if cols[0]:
+            item['author'] = cols[0]
+
+        if cols[1]:
+            item['title'] = cols[1]
+
+        if cols[2]:
+            item['due_date'] = parse_due_date(cols[2])
+
+        items.append(item)
+
+    return items
+
+
+def parse_saldo(page_source):
+    """Parses saldo.
+
+    :param page_source: HTML page source
+    :return: Saldo or None
+    :rtype: str or None
+    """
+    soup = BeautifulSoup(page_source, 'lxml')
+
+    lines = soup.find_all('div', class_='kontozeile_center')
+
+    if lines:
+        saldo = re.findall('-?\d+,\d{2}', lines[0].text)
+
+        if saldo:
+            return saldo[0]
+
+    return None

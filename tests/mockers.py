@@ -56,3 +56,15 @@ class MockBrowserSearch(MockBrowser):
 class MockBrowserLogin(MockBrowser):
     def __init__(self, page_loader):
         self.page_data = page_loader()
+
+
+class MockBrowserRentList(MockBrowser):
+    def _page_loader(self):
+        with open(
+            file_path(
+                __file__, 'facilities', 'wolfsburg', 'files',
+                'account0.html')) as f:
+
+            source = f.read()
+            for i in range(3):
+                yield source

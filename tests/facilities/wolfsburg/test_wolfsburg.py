@@ -2,7 +2,8 @@ from datetime import date
 import pytest
 
 from tests.tools import file_path
-from tests.mockers import MockBrowserSearch, MockBrowserLogin
+from tests.mockers import (MockBrowserSearch, MockBrowserLogin,
+                           MockBrowserRentList)
 
 from app.facilities import wolfsburg
 
@@ -189,3 +190,126 @@ def test_login(input, expected):
     browser = MockBrowserLogin(page_loader)
 
     assert wolfsburg.login(browser, '1234567', '1234567') is expected
+
+
+@pytest.mark.parametrize('input,expected', [
+    ('account0.html', [
+        {
+            'title': 'Albrecht Dürer',
+            'due_date': date(2016, 4, 15),
+            'author': 'Dürer, Albrecht'
+        }, {
+            'title': 'Modezeichnen',
+            'due_date': date(2016, 4, 15),
+            'author': 'Hopkins, John'
+        }, {
+            'title': 'Edward Hopper',
+            'due_date': date(2016, 4, 15),
+            'author': 'Hopper, Edward'
+        }, {
+            'title': ('Edward Hopper - Amerika - '
+                      'Licht und Schatten eines Mythos'),
+            'due_date': date(2016, 4, 15),
+            'author': 'Hopper, Edward'
+        }, {
+            'title': '¬Die¬ Geschichte der Schrift',
+            'due_date': date(2016, 4, 15),
+            'author': 'Jean, Georges'
+        }, {
+            'title': 'Mode',
+            'due_date': date(2016, 4, 15),
+            'author': 'Lehnert, Gertrud'
+        }, {
+            'title': 'Reclams Mode- und Kostümlexikon',
+            'due_date': date(2016, 4, 15),
+            'author': 'Loschek, Ingrid'
+        }, {
+            'title': 'Jan van Eyck',
+            'due_date': date(2016, 4, 15),
+        }, {
+            'title': 'Meister der Modezeichnung',
+            'due_date': date(2016, 4, 15),
+        }, {
+            'title': 'Zeichnen & Entwerfen',
+            'due_date': date(2016, 4, 15),
+        }, {
+            'title': 'Zeichnen und Entwerfen',
+            'due_date': date(2016, 4, 15),
+        }, {
+            'title': 'Vogue on Christian Dior',
+            'due_date': date(2016, 4, 15),
+        }
+    ])
+])
+def test_parse_rent(input, expected):
+    with open(file_path(__file__, 'files', input), 'r') as f:
+
+        assert wolfsburg.parse_rent_list(f.read()) == expected
+
+
+@pytest.mark.parametrize('input,expected', [
+    ('account0.html', '-36,00'),
+    ('account1.html', None)
+])
+def test_parse_saldo(input, expected):
+    with open(file_path(__file__, 'files', input), 'r') as f:
+
+        assert wolfsburg.parse_saldo(f.read()) == expected
+
+
+def test_rent_list(monkeypatch):
+    monkeypatch.setattr('app.facilities.wolfsburg.create_browser',
+                        MockBrowserRentList)
+
+    expected = {
+        'items': [
+            {
+                'title': 'Albrecht Dürer',
+                'due_date': date(2016, 4, 15),
+                'author': 'Dürer, Albrecht'
+            }, {
+                'title': 'Modezeichnen',
+                'due_date': date(2016, 4, 15),
+                'author': 'Hopkins, John'
+            }, {
+                'title': 'Edward Hopper',
+                'due_date': date(2016, 4, 15),
+                'author': 'Hopper, Edward'
+            }, {
+                'title': ('Edward Hopper - Amerika - '
+                          'Licht und Schatten eines Mythos'),
+                'due_date': date(2016, 4, 15),
+                'author': 'Hopper, Edward'
+            }, {
+                'title': '¬Die¬ Geschichte der Schrift',
+                'due_date': date(2016, 4, 15),
+                'author': 'Jean, Georges'
+            }, {
+                'title': 'Mode',
+                'due_date': date(2016, 4, 15),
+                'author': 'Lehnert, Gertrud'
+            }, {
+                'title': 'Reclams Mode- und Kostümlexikon',
+                'due_date': date(2016, 4, 15),
+                'author': 'Loschek, Ingrid'
+            }, {
+                'title': 'Jan van Eyck',
+                'due_date': date(2016, 4, 15),
+            }, {
+                'title': 'Meister der Modezeichnung',
+                'due_date': date(2016, 4, 15),
+            }, {
+                'title': 'Zeichnen & Entwerfen',
+                'due_date': date(2016, 4, 15),
+            }, {
+                'title': 'Zeichnen und Entwerfen',
+                'due_date': date(2016, 4, 15),
+            }, {
+                'title': 'Vogue on Christian Dior',
+                'due_date': date(2016, 4, 15),
+            }
+        ],
+        'saldo': '-36,00'
+    }
+
+    assert wolfsburg.rent_list('1234567', '1234567') == expected

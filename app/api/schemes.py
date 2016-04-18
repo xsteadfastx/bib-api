@@ -29,11 +29,24 @@ class Title(Schema):
 
 
 class SearchRequest(Schema):
-    """ Schema for a search request."""
+    """Schema for a search request."""
     term = fields.String(required=True)
 
 
 class SearchResponse(Schema):
-    """ Schema for a search result."""
+    """Schema for a search result."""
     results = fields.Nested(Title, many=True)
     next_page = fields.Int()
+
+
+class RentedItem(Schema):
+    """Schema for a rented item."""
+    author = fields.String()
+    title = fields.String()
+    due_date = fields.Date()
+
+
+class RentedListResponse(Schema):
+    """Schema for a rented list response."""
+    items = fields.Nested(RentedItem, many=True)
+    saldo = fields.String()
