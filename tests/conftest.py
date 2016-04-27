@@ -17,13 +17,16 @@ def app():
     app = create_app('test.cfg')
     ctx = app.app_context()
     ctx.push()
+
     yield app
+
     ctx.pop()
 
 
 @pytest.yield_fixture
 def client(app):
     with app.test_client() as client:
+
         yield client
 
 

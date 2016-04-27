@@ -3,7 +3,7 @@ import pytest
 
 from tests.tools import load_json
 
-from app.api.decorators import valid_facility
+from app.api.decorators import valid_facility, valid_token
 from app.api.errors import InvalidUsage
 
 
@@ -33,6 +33,37 @@ def test_valid_facility(facility, status_code, data, monkeypatch):
         return jsonify({'access': True})
 
     rv = app.test_client().get('/{}/valid'.format(facility))
+
+    assert rv.status_code == status_code
+    assert load_json(rv.data) == data
+
+
+@pytest.mark.parametrize('url,status_code,data', [
+    ('/test?token=foobar', 401, {'message': 'bad token'}),
+    (
+        '/test?token=ImZvb2JhciI.x2pWn8xXDGEzpBMOwp54KD3lHac',
+        200,
+        {'access': True}
+    ),
+    ('/test', 401, {'message': 'no token'})
+])
+def test_valid_token(url, status_code, data, monkeypatch):
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'testing'
+
+    @app.errorhandler(InvalidUsage)
+    def handle_invalid_usage(error):
+        response = jsonify(error.to_dict())
+        response.status_code = error.status_code
+
+        return response
+
+    @app.route('/test')
+    @valid_token
+    def valid():
+        return jsonify({'access': True})
+
+    rv = app.test_client().get(url)
 
     assert rv.status_code == status_code
     assert load_json(rv.data) == data
