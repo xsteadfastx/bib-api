@@ -268,27 +268,27 @@ def login(browser, cardnumber, password):
         return False
 
 
-def rent_list(cardnumber, password):
-    """Gets rent list.
+def lent_list(cardnumber, password):
+    """Gets lent list.
 
-    Logs in a parses the account for rented items.
+    Logs in a parses the account for lent items.
 
     :param cardnumber: Library Cardnumber.
     :param password: Library Accountpassword
-    :return: Dictionary with rented items
+    :return: Dictionary with lent items
     :rtype: dict
     """
     browser = create_browser()
     login(browser, cardnumber, password)
 
-    items = parse_rent_list(browser.page_source)
+    items = parse_lent_list(browser.page_source)
     saldo = parse_saldo(browser.page_source)
 
     return {'items': items, 'saldo': saldo}
 
 
-def parse_rent_list(page_source):
-    """Parses rent list.
+def parse_lent_list(page_source):
+    """Parses lent list.
 
     :param page_source: HTML page source
     :type page_source: str

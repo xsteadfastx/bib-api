@@ -241,10 +241,10 @@ def test_login(input, expected):
         }
     ])
 ])
-def test_parse_rent(input, expected):
+def test_parse_lent(input, expected):
     with open(file_path(__file__, 'files', input), 'r') as f:
 
-        assert wolfsburg.parse_rent_list(f.read()) == expected
+        assert wolfsburg.parse_lent_list(f.read()) == expected
 
 
 @pytest.mark.parametrize('input,expected', [
@@ -257,7 +257,7 @@ def test_parse_saldo(input, expected):
         assert wolfsburg.parse_saldo(f.read()) == expected
 
 
-def test_rent_list(monkeypatch):
+def test_lent_list(monkeypatch):
     monkeypatch.setattr('app.facilities.wolfsburg.create_browser',
                         MockBrowserRentList)
 
@@ -312,4 +312,4 @@ def test_rent_list(monkeypatch):
         'saldo': '-36,00'
     }
 
-    assert wolfsburg.rent_list('1234567', '1234567') == expected
+    assert wolfsburg.lent_list('1234567', '1234567') == expected
