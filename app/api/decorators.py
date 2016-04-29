@@ -35,7 +35,8 @@ def valid_token(f):
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        s = URLSafeSerializer(current_app.config['SECRET_KEY'])
+        s = URLSafeSerializer(current_app.config['SECRET_KEY'],
+                              salt=kwargs['facility'])
 
         if 'token' not in request.args:
             raise InvalidUsage('no token', status_code=401)

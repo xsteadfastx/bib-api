@@ -39,13 +39,13 @@ def test_valid_facility(facility, status_code, data, monkeypatch):
 
 
 @pytest.mark.parametrize('url,status_code,data', [
-    ('/test?token=foobar', 401, {'message': 'bad token'}),
+    ('/wolfsburg/valid?token=foobar', 401, {'message': 'bad token'}),
     (
-        '/test?token=ImZvb2JhciI.x2pWn8xXDGEzpBMOwp54KD3lHac',
+        '/wolfsburg/valid?token=ImZvb2JhciI.5MbG27cXJGCfHaXh90CC0MKhem0',
         200,
         {'access': True}
     ),
-    ('/test', 401, {'message': 'no token'})
+    ('/wolfsburg/valid', 401, {'message': 'no token'})
 ])
 def test_valid_token(url, status_code, data, monkeypatch):
     app = Flask(__name__)
@@ -58,9 +58,9 @@ def test_valid_token(url, status_code, data, monkeypatch):
 
         return response
 
-    @app.route('/test')
+    @app.route('/<facility>/valid')
     @valid_token
-    def valid():
+    def valid(facility):
         return jsonify({'access': True})
 
     rv = app.test_client().get(url)
