@@ -3,6 +3,8 @@
   apt: pkg={{ item }} state=latest update_cache=true
   with_items:
     - git
+    - libffi-dev
+    - libssl-dev
     - python3
     - redis-server
     - tree
