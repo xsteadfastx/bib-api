@@ -1,7 +1,8 @@
 from flask import current_app, jsonify, request
+from itsdangerous import URLSafeSerializer
 
 from app.api import api, schemes
-from app.api.decorators import valid_facility
+from app.api.decorators import valid_facility, valid_token
 from app.api.errors import InvalidUsage
 
 
@@ -93,3 +94,31 @@ def search(facility):
     data = schemes.SearchResponse().dump(results)
 
     return jsonify(data.data)
+
+
+@api.route('/<facility>/token', methods=['POST'])
+@valid_facility
+def get_token(facility):
+    # get authentication data and validate it
+    json_data, errors = schemes.TokenRequest().load(request.get_json())
+
+    if errors:
+        raise InvalidUsage(errors)
+
+    # create serializer
+    s = URLSafeSerializer(current_app.config['SECRET_KEY'], salt=facility)
+
+    # create token
+    token = s.dumps(json_data)
+
+    # scheme it
+    data = schemes.TokenResponse().dump({'token': token})
+
+    return jsonify(data.data)
+
+
+@api.route('/<facility>/lent', methods=['GET'])
+@valid_token
+@valid_facility
+def lent_list(facility):
+    pass

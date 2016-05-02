@@ -50,3 +50,14 @@ class RentedListResponse(Schema):
     """Schema for a rented list response."""
     items = fields.Nested(RentedItem, many=True)
     saldo = fields.String()
+
+
+class TokenRequest(Schema):
+    """Schema for a token request."""
+    username = fields.String(required=True)
+    password = fields.String(required=True)
+
+
+class TokenResponse(Schema):
+    """Schema for a token response."""
+    token = fields.String()
