@@ -1,6 +1,6 @@
 import os
-import sys
 import pytest
+import sys
 
 
 def pytest_configure(config):
@@ -26,6 +26,37 @@ def app():
 @pytest.yield_fixture
 def client(app):
     with app.test_client() as client:
+
+        yield client
+
+
+@pytest.yield_fixture
+def flask_app():
+    from flask import Flask, jsonify
+
+    from app.api.errors import InvalidUsage
+
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'testing'
+
+    @app.errorhandler(InvalidUsage)
+    def handle_invalid_usage(error):
+        response = jsonify(error.to_dict())
+        response.status_code = error.status_code
+
+        return response
+
+    ctx = app.app_context()
+    ctx.push()
+
+    yield app
+
+    ctx.pop()
+
+
+@pytest.yield_fixture
+def flask_client(flask_app):
+    with flask_app.text_client() as client:
 
         yield client
 
