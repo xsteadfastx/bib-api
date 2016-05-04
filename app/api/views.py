@@ -99,8 +99,32 @@ def search(facility):
 @api.route('/<facility>/token', methods=['POST'])
 @valid_facility
 def get_token(facility):
+    """Creates a authentication token.
+
+    This endpoint returns a authentication token for a specific facility.
+
+    Request::
+
+        http POST localhost:5000/api/wolfsburg/token username=foo password=bar
+
+    Response::
+
+        {
+            "token": "eyJwYXNzd29yZCI6IjoiZm9vIn0.DmRMyew4ukCAZHsnIrs4PaY8"
+
+        }
+
+    :param facility: The facility to get a token for.
+    :type facility: str
+    """
+    post_data = request.get_json()
+
+    # if there is no data raise an error
+    if not post_data:
+        raise InvalidUsage('no data')
+
     # get authentication data and validate it
-    json_data, errors = schemes.TokenRequest().load(request.get_json())
+    json_data, errors = schemes.TokenRequest().load(post_data)
 
     if errors:
         raise InvalidUsage(errors)

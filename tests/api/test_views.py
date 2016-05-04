@@ -2,7 +2,7 @@ import datetime
 import json
 import pytest
 
-from tests.tools import load_json
+from tests.tools import load_json, verify_token
 
 
 def test_facility_list(client, monkeypatch):
@@ -79,3 +79,42 @@ def test_search(search_return, expected, client, monkeypatch):
                      headers={'content-type': 'application/json'})
 
     assert load_json(rv.data) == expected
+
+
+@pytest.mark.parametrize('url,data,expected,status_code', [
+    (
+        '/api/wolfsburg/token',
+        {'username': 'foo', 'password': 'bar'},
+        True,
+        200
+    ),
+    (
+        '/api/wolfsburg/token',
+        {'username': 'foo'},
+        {'message': {'password': ['Missing data for required field.']}},
+        400
+    ),
+    (
+        '/api/wolfsburg/token',
+        {},
+        {'message': 'no data'},
+        400
+    )
+
+])
+def test_get_token(url, data, expected, status_code, client, monkeypatch):
+    monkeypatch.setattr('app.api.views.current_app.facilities',
+                        {'wolfsburg': {}})
+
+    rv = client.post(url, data=json.dumps(data),
+                     headers={'content-type': 'application/json'})
+
+    assert rv.status_code == status_code
+
+    if expected is not True:
+        assert load_json(rv.data) == expected
+
+    else:
+        token = load_json(rv.data)['token']
+
+        assert data == verify_token(token)
