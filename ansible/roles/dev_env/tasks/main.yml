@@ -6,6 +6,7 @@
     - libffi-dev
     - libssl-dev
     - python3
+    - python3-flake8
     - redis-server
     - tree
 
