@@ -1,4 +1,10 @@
 ---
+- name: get conda state
+  stat:
+    path=/home/vagrant/miniconda3/bin/conda
+  register:
+    conda_bin
+
 - name: download miniconda
   get_url:
     url=https://repo.continuum.io/miniconda/Miniconda3-3.19.0-Linux-x86.sh
@@ -6,9 +12,11 @@
     mode=0755
     validate_certs=no
     checksum=md5:391bfdd892c2b8594b0d79bcfd2763c5
+  when: conda_bin.stat.exists == False
 
 - name: install miniconda
   become: no
   shell: bash /tmp/miniconda.sh -b -f
+  when: conda_bin.stat.exists == False
   notify:
     - remove miniconda install script
