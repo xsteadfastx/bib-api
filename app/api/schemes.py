@@ -39,16 +39,16 @@ class SearchResponse(Schema):
     next_page = fields.Int()
 
 
-class RentedItem(Schema):
-    """Schema for a rented item."""
+class LentItem(Schema):
+    """Schema for a lent item."""
     author = fields.String()
     title = fields.String()
     due_date = fields.Date()
 
 
-class RentedListResponse(Schema):
-    """Schema for a rented list response."""
-    items = fields.Nested(RentedItem, many=True)
+class LentListResponse(Schema):
+    """Schema for a lent list response."""
+    items = fields.Nested(LentItem, many=True)
     saldo = fields.String()
 
 

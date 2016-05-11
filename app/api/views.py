@@ -142,7 +142,25 @@ def get_token(facility):
 
 
 @api.route('/<facility>/lent', methods=['GET'])
-@valid_token
 @valid_facility
+@valid_token
 def lent_list(facility):
-    pass
+    """Returns a list of lent items and the saldo of the account.
+
+    Request::
+
+    Response::
+
+    """
+    s = URLSafeSerializer(current_app.config['SECRET_KEY'], salt=facility)
+
+    token = request.args['token']
+
+    userdata = s.loads(token)
+
+    lent_list = current_app.facilities[facility]['lent_list'](
+        userdata['username'], userdata['password'])
+
+    data = schemes.LentListResponse().dump(lent_list)
+
+    return jsonify(data.data)

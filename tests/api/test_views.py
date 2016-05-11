@@ -72,7 +72,11 @@ def test_facility_list(client, monkeypatch):
 def test_search(search_return, expected, client, monkeypatch):
     monkeypatch.setattr(
         'app.api.views.current_app.facilities',
-        {'wolfsburg': {'search': lambda term, page: search_return}})
+        {
+            'wolfsburg': {
+                'search': lambda term, page: search_return
+            }
+        })
 
     rv = client.post('/api/wolfsburg/search',
                      data=json.dumps({'term': 'batman'}),
@@ -118,3 +122,56 @@ def test_get_token(url, data, expected, status_code, client, monkeypatch):
         token = load_json(rv.data)['token']
 
         assert data == verify_token(token)
+
+
+@pytest.mark.parametrize('lent_return,expected', [
+    (
+        {
+            'items': [
+                {
+                    'title': 'Albrecht Dürer',
+                    'due_date': datetime.date(2016, 4, 15),
+                    'author': 'Dürer, Albrecht'
+                }, {
+                    'title': 'Modezeichnen',
+                    'due_date': datetime.date(2016, 4, 15),
+                    'author': 'Hopkins, John'
+                }, {
+                    'title': 'Edward Hopper',
+                    'due_date': datetime.date(2016, 4, 15),
+                    'author': 'Hopper, Edward'
+                }
+            ],
+            'saldo': '-36,00'
+        },
+        {
+            'saldo': '-36,00',
+            'items': [
+                {
+                    'due_date': '2016-04-15', 'author': 'Dürer, Albrecht',
+                    'title': 'Albrecht Dürer'
+                }, {
+                    'due_date': '2016-04-15', 'author': 'Hopkins, John',
+                    'title': 'Modezeichnen'
+                }, {
+                    'due_date': '2016-04-15', 'author': 'Hopper, Edward',
+                    'title': 'Edward Hopper'
+                }
+            ]
+        }
+    )
+])
+def test_lent_list(lent_return, expected, client, monkeypatch):
+    monkeypatch.setattr('app.api.views.current_app.facilities',
+                        {
+                            'wolfsburg': {
+                                'lent_list': lambda x, y: lent_return
+                            }
+                        })
+
+    rv = client.get(
+        ('/api/wolfsburg/lent?token='
+         'eyJwYXNzd29yZCI6ImJhciIsInVzZXJuYW1lIjoiZm9vIn0.'
+         'pIUBfh1BSvoROF8wgHsebtQyFK8'))
+
+    assert load_json(rv.data) == expected
