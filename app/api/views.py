@@ -147,9 +147,34 @@ def get_token(facility):
 def lent_list(facility):
     """Returns a list of lent items and the saldo of the account.
 
+    This view returns all lent items in a list with the title and author
+    plus the date until the item needs to get returned. It also tries to get
+    the saldo of the account.
+
     Request::
 
+        http GET localhost:5000/api/wolfsburg/lent?token=pIUBfh1BSvoROF8wgHse
+
     Response::
+
+        {
+            'saldo': '-36,00',
+            'items': [
+                {
+                    'due_date': '2016-04-15', 'author': 'Dürer, Albrecht',
+                    'title': 'Albrecht Dürer'
+                }, {
+                    'due_date': '2016-04-15', 'author': 'Hopkins, John',
+                    'title': 'Modezeichnen'
+                }, {
+                    'due_date': '2016-04-15', 'author': 'Hopper, Edward',
+                    'title': 'Edward Hopper'
+                }
+            ]
+        }
+
+    :param facility: The facility to get a lent list from.
+    :type facility: str
 
     """
     s = URLSafeSerializer(current_app.config['SECRET_KEY'], salt=facility)
