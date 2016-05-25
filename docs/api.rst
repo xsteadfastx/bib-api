@@ -21,6 +21,12 @@ Decorators
     :members:
 
 
+iCalendar
+---------
+.. automodule:: app.api.ical
+    :members:
+
+
 Facilities
 ----------
 
