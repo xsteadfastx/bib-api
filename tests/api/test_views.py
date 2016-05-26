@@ -175,3 +175,39 @@ def test_lent_list(lent_return, expected, client, monkeypatch):
          'pIUBfh1BSvoROF8wgHsebtQyFK8'))
 
     assert load_json(rv.data) == expected
+
+
+@pytest.mark.parametrize('lent_return,expected', [
+    (
+        {
+            'saldo': '-36,00',
+            'items': [
+                {
+                    'due_date': '2016-04-15', 'author': 'Dürer, Albrecht',
+                    'title': 'Albrecht Dürer'
+                }, {
+                    'due_date': '2016-04-20', 'author': 'Hopkins, John',
+                    'title': 'Modezeichnen'
+                }, {
+                    'due_date': '2016-04-15', 'author': 'Hopper, Edward',
+                    'title': 'Edward Hopper'
+                }
+            ]
+        },
+        None
+    )
+])
+def test_lent_ical(lent_return, expected, client, monkeypatch):
+    monkeypatch.setattr('app.api.views.current_app.facilities',
+                        {
+                            'wolfsburg': {
+                                'lent_list': lambda x, y: lent_return
+                            }
+                        })
+
+    rv = client.get(
+        ('/api/wolfsburg/ical/lent.ics?token='
+         'eyJwYXNzd29yZCI6ImJhciIsInVzZXJuYW1lIjoiZm9vIn0.'
+         'pIUBfh1BSvoROF8wgHsebtQyFK8'))
+
+    print(rv)

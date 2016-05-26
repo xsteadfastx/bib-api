@@ -40,5 +40,5 @@ dependencies:
   - sphinx-rtd-theme==0.1.9
   - sphinxcontrib-httpdomain==1.4.0
   - termcolor==1.1.0
-  - werkzeug==0.11.3
+  - werkzeug==0.11.10
 

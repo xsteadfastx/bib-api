@@ -1,9 +1,10 @@
-from flask import current_app, jsonify, request
+from flask import current_app, jsonify, request, make_response
 from itsdangerous import URLSafeSerializer
 
 from app.api import api, schemes
 from app.api.decorators import valid_facility, valid_token
 from app.api.errors import InvalidUsage
+from app.api.ical import build_ical
 
 
 @api.route('/facilities', methods=['GET'])
@@ -189,3 +190,27 @@ def lent_list(facility):
     data = schemes.LentListResponse().dump(lent_list)
 
     return jsonify(data.data)
+
+
+@api.route('/<facility>/ical/lent.ics', methods=['GET'])
+@valid_facility
+@valid_token
+def lent_ical(facility):
+    s = URLSafeSerializer(current_app.config['SECRET_KEY'], salt=facility)
+
+    token = request.args['token']
+
+    userdata = s.loads(token)
+
+    lent_list = current_app.facilities[facility]['lent_list'](
+        userdata['username'], userdata['password'])
+
+    data = schemes.LentListResponse().dump(lent_list)
+    print(data)
+
+    ical = build_ical(data)
+
+    resp = make_response(ical, 200)
+    resp.headers.extend({'Content-type': 'text/calendar; charset=UTF-8'})
+
+    return resp
