@@ -7,20 +7,21 @@ dependencies:
 - pip=8.1.1=py35_1
 - python=3.5.1=0
 - readline=6.2=2
-- setuptools=20.7.0=py35_0
-- sqlite=3.9.2=0
+- setuptools=21.2.1=py35_0
+- sqlite=3.13.0=0
 - tk=8.5.18=0
 - wheel=0.29.0=py35_0
 - xz=5.0.5=1
-- zlib=1.2.8=0
+- zlib=1.2.8=3
 - pip:
   - alabaster==0.7.7
   - arrow==0.4.2
   - babel==2.2.0
   - beautifulsoup4==4.4.1
   - bottle==0.12.8
+  - click==6.6
   - docutils==0.12
-  - flask==0.10.1
+  - flask==0.11
   - gunicorn==19.3.0
   - ics==0.3.1
   - itsdangerous==0.24
