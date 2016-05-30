@@ -5,7 +5,9 @@ from ics import Calendar, Event
 def build_ical(lent_list):
     """Builds ical from a lent list.
 
-    :param lent_list: lent list.
+    It takes a lent list that ran through a Marshmallow scheme.
+
+    :param lent_list: Marshmallowed lent list.
     :type lent_list: dict
     :return: ical.
     :rtype: str

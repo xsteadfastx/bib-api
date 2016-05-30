@@ -1,3 +1,4 @@
+from ics import Calendar
 import datetime
 import json
 import pytest
@@ -180,21 +181,41 @@ def test_lent_list(lent_return, expected, client, monkeypatch):
 @pytest.mark.parametrize('lent_return,expected', [
     (
         {
-            'saldo': '-36,00',
             'items': [
                 {
-                    'due_date': '2016-04-15', 'author': 'Dürer, Albrecht',
-                    'title': 'Albrecht Dürer'
+                    'title': 'Albrecht Dürer',
+                    'due_date': datetime.date(2016, 4, 15),
+                    'author': 'Dürer, Albrecht'
                 }, {
-                    'due_date': '2016-04-20', 'author': 'Hopkins, John',
-                    'title': 'Modezeichnen'
+                    'title': 'Modezeichnen',
+                    'due_date': datetime.date(2016, 4, 20),
+                    'author': 'Hopkins, John'
                 }, {
-                    'due_date': '2016-04-15', 'author': 'Hopper, Edward',
-                    'title': 'Edward Hopper'
+                    'title': 'Edward Hopper',
+                    'due_date': datetime.date(2016, 4, 15),
+                    'author': 'Hopper, Edward'
+                }
+            ],
+            'saldo': '-36,00'
+        },
+        {
+            'status_code': 200,
+            'content_type': 'text/calendar; charset=utf-8',
+            'events': [
+                {
+                    'begin': datetime.datetime(2016, 4, 15, 0, 0, 0),
+                    'description': ('Dürer, Albrecht: Albrecht Dürer\n'
+                                    'Hopper, Edward: Edward Hopper'),
+                    'name': 'Bibliotheksrueckgaben: 2'
+                },
+                {
+                    'begin': datetime.datetime(2016, 4, 20, 0, 0, 0),
+                    'description': 'Hopkins, John: Modezeichnen',
+                    'name': 'Bibliotheksrueckgaben: 1'
                 }
             ]
-        },
-        None
+
+        }
     )
 ])
 def test_lent_ical(lent_return, expected, client, monkeypatch):
@@ -210,4 +231,12 @@ def test_lent_ical(lent_return, expected, client, monkeypatch):
          'eyJwYXNzd29yZCI6ImJhciIsInVzZXJuYW1lIjoiZm9vIn0.'
          'pIUBfh1BSvoROF8wgHsebtQyFK8'))
 
-    print(rv)
+    assert rv.status_code == expected['status_code']
+    assert rv.headers['Content-Type'] == expected['content_type']
+
+    cal = Calendar(rv.data.decode('utf-8'))
+
+    for i, event in enumerate(cal.events):
+        assert event.begin.date() == expected['events'][i]['begin'].date()
+        assert event.name == expected['events'][i]['name']
+        assert event.description == expected['events'][i]['description']

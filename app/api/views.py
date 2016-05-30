@@ -1,4 +1,4 @@
-from flask import current_app, jsonify, request, make_response
+from flask import current_app, jsonify, request, Response
 from itsdangerous import URLSafeSerializer
 
 from app.api import api, schemes
@@ -206,11 +206,7 @@ def lent_ical(facility):
         userdata['username'], userdata['password'])
 
     data = schemes.LentListResponse().dump(lent_list)
-    print(data)
 
-    ical = build_ical(data)
+    ical = build_ical(data.data)
 
-    resp = make_response(ical, 200)
-    resp.headers.extend({'Content-type': 'text/calendar; charset=UTF-8'})
-
-    return resp
+    return Response(ical, mimetype='text/calendar')
