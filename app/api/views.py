@@ -1,5 +1,6 @@
-from flask import current_app, jsonify, request, Response
+from flask import current_app, jsonify, request, Response, g
 from itsdangerous import URLSafeSerializer
+import arrow
 
 from app.api import api, schemes
 from app.api.decorators import valid_facility, valid_token
@@ -200,13 +201,28 @@ def lent_ical(facility):
 
     token = request.args['token']
 
-    userdata = s.loads(token)
+    # check if token already in redis
+    redis_entry = g.redis.hgetall(token)
+    if redis_entry:
 
-    lent_list = current_app.facilities[facility]['lent_list'](
-        userdata['username'], userdata['password'])
+        two_hours_ago = arrow.utcnow().replace(hours=-2)
+        updated = arrow.get(redis_entry[b'updated'].decode('utf-8'))
 
-    data = schemes.LentListResponse().dump(lent_list)
+        if updated > two_hours_ago:
+            ical = redis_entry[b'ical'].decode('utf-8')
 
-    ical = build_ical(data.data)
+    else:
+
+        userdata = s.loads(token)
+
+        lent_list = current_app.facilities[facility]['lent_list'](
+            userdata['username'], userdata['password'])
+
+        data = schemes.LentListResponse().dump(lent_list)
+
+        ical = build_ical(data.data)
+
+        # store new ical in redis
+        g.redis.hmset(token, dict(ical=ical, updated=arrow.utcnow()))
 
     return Response(ical, mimetype='text/calendar')

@@ -1,6 +1,7 @@
+from flask import Flask, g
 import os
+import redis
 import sys
-from flask import Flask
 
 
 def load_facilities():
@@ -48,9 +49,17 @@ def create_app(config_filename):
     app = Flask(__name__)
     app.config.from_pyfile(config_filename)
 
+    if 'REDIS_PORT_6379_TCP_ADDR' not in os.environ.keys():
+        os.environ['REDIS_PORT_6379_TCP_ADDR'] = 'localhost'
+
     from app.api import api
     app.register_blueprint(api)
 
     app.facilities = load_facilities()
+
+    @app.before_request
+    def before_request():
+        g.redis = redis.StrictRedis(
+            host=os.environ['REDIS_PORT_6379_TCP_ADDR'])
 
     return app

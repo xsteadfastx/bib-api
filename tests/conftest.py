@@ -5,7 +5,7 @@ import sys
 
 def pytest_configure(config):
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/../')
-    os.environ['SECRET_KEY'] = 'secretkey'
+
     if 'REDIS_PORT_6379_TCP_ADDR' not in os.environ.keys():
         os.environ['REDIS_PORT_6379_TCP_ADDR'] = 'localhost'
 

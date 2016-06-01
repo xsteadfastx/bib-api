@@ -218,7 +218,7 @@ def test_lent_list(lent_return, expected, client, monkeypatch):
         }
     )
 ])
-def test_lent_ical(lent_return, expected, client, monkeypatch):
+def test_lent_ical(lent_return, expected, client, monkeypatch, redis_conn):
     monkeypatch.setattr('app.api.views.current_app.facilities',
                         {
                             'wolfsburg': {
@@ -226,15 +226,44 @@ def test_lent_ical(lent_return, expected, client, monkeypatch):
                             }
                         })
 
-    rv = client.get(
-        ('/api/wolfsburg/ical/lent.ics?token='
-         'eyJwYXNzd29yZCI6ImJhciIsInVzZXJuYW1lIjoiZm9vIn0.'
-         'pIUBfh1BSvoROF8wgHsebtQyFK8'))
+    token = ('eyJwYXNzd29yZCI6ImJhciIsInVzZXJuYW1lIjoiZm9vIn0.'
+             'pIUBfh1BSvoROF8wgHsebtQyFK8')
+
+    # check if redis is empty
+    assert redis_conn.hgetall(token) == {}
+
+    rv = client.get('/api/wolfsburg/ical/lent.ics?token={}'.format(token))
 
     assert rv.status_code == expected['status_code']
     assert rv.headers['Content-Type'] == expected['content_type']
 
     cal = Calendar(rv.data.decode('utf-8'))
+
+    for i, event in enumerate(cal.events):
+        assert event.begin.date() == expected['events'][i]['begin'].date()
+        assert event.name == expected['events'][i]['name']
+        assert event.description == expected['events'][i]['description']
+
+    # check if redis is filled and if they are correct
+    redis_entry = redis_conn.hgetall(token)
+
+    assert redis_entry != {}
+
+    cal = Calendar(redis_entry[b'ical'].decode('utf-8'))
+
+    for i, event in enumerate(cal.events):
+        assert event.begin.date() == expected['events'][i]['begin'].date()
+        assert event.name == expected['events'][i]['name']
+        assert event.description == expected['events'][i]['description']
+
+    # check if it loads from redis on the next request
+    client.get('/api/wolfsburg/ical/lent.ics?token={}'.format(token))
+
+    new_redis_entry = redis_conn.hgetall(token)
+
+    assert new_redis_entry == redis_entry
+
+    cal = Calendar(new_redis_entry[b'ical'].decode('utf-8'))
 
     for i, event in enumerate(cal.events):
         assert event.begin.date() == expected['events'][i]['begin'].date()
