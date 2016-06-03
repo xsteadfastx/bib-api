@@ -66,6 +66,7 @@ def redis_conn():
     import redis
 
     r = redis.StrictRedis(host=os.environ['REDIS_PORT_6379_TCP_ADDR'])
+    r.flushall()
 
     yield r
 

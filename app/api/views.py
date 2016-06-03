@@ -211,18 +211,18 @@ def lent_ical(facility):
         if updated > two_hours_ago:
             ical = redis_entry[b'ical'].decode('utf-8')
 
-    else:
+            return Response(ical, mimetype='text/calendar')
 
-        userdata = s.loads(token)
+    userdata = s.loads(token)
 
-        lent_list = current_app.facilities[facility]['lent_list'](
-            userdata['username'], userdata['password'])
+    lent_list = current_app.facilities[facility]['lent_list'](
+        userdata['username'], userdata['password'])
 
-        data = schemes.LentListResponse().dump(lent_list)
+    data = schemes.LentListResponse().dump(lent_list)
 
-        ical = build_ical(data.data)
+    ical = build_ical(data.data)
 
-        # store new ical in redis
-        g.redis.hmset(token, dict(ical=ical, updated=arrow.utcnow()))
+    # store new ical in redis
+    g.redis.hmset(token, dict(ical=ical, updated=arrow.utcnow()))
 
     return Response(ical, mimetype='text/calendar')

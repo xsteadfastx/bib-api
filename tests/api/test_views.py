@@ -1,8 +1,11 @@
 from ics import Calendar
+import arrow
 import datetime
 import json
 import pytest
 
+from app.api import schemes
+from app.api.ical import build_ical
 from tests.tools import load_json, verify_token
 
 
@@ -269,3 +272,64 @@ def test_lent_ical(lent_return, expected, client, monkeypatch, redis_conn):
         assert event.begin.date() == expected['events'][i]['begin'].date()
         assert event.name == expected['events'][i]['name']
         assert event.description == expected['events'][i]['description']
+
+
+@pytest.mark.parametrize('lent_return,expected', [
+    (
+        {
+            'items': [
+                {
+                    'title': 'Albrecht Dürer',
+                    'due_date': datetime.date(2016, 4, 15),
+                    'author': 'Dürer, Albrecht'
+                }, {
+                    'title': 'Modezeichnen',
+                    'due_date': datetime.date(2016, 4, 20),
+                    'author': 'Hopkins, John'
+                }, {
+                    'title': 'Edward Hopper',
+                    'due_date': datetime.date(2016, 4, 15),
+                    'author': 'Hopper, Edward'
+                }
+            ],
+            'saldo': '-36,00'
+        },
+        {
+            'status_code': 200,
+            'content_type': 'text/calendar; charset=utf-8',
+            'events': [
+                {
+                    'begin': datetime.datetime(2016, 4, 15, 0, 0, 0),
+                    'description': ('Dürer, Albrecht: Albrecht Dürer\n'
+                                    'Hopper, Edward: Edward Hopper'),
+                    'name': 'Bibliotheksrueckgaben: 2'
+                },
+                {
+                    'begin': datetime.datetime(2016, 4, 20, 0, 0, 0),
+                    'description': 'Hopkins, John: Modezeichnen',
+                    'name': 'Bibliotheksrueckgaben: 1'
+                }
+            ]
+
+        }
+    )
+])
+def test_lent_ical_older_than_two_hours(lent_return, expected, client,
+                                        monkeypatch, redis_conn):
+    monkeypatch.setattr('app.api.views.current_app.facilities',
+                        {
+                            'wolfsburg': {
+                                'lent_list': lambda x, y: lent_return
+                            }
+                        })
+
+    token = ('eyJwYXNzd29yZCI6ImJhciIsInVzZXJuYW1lIjoiZm9vIn0.'
+             'pIUBfh1BSvoROF8wgHsebtQyFK8')
+
+    # store a ical in redis
+    ical = build_ical(schemes.LentListResponse().dump(lent_return).data)
+    redis_conn.hmset(
+        token, dict(ical=ical,
+                    updated=arrow.get('2013-05-11T21:23:58.970460+00:00')))
+
+    client.get('/api/wolfsburg/ical/lent.ics?token={}'.format(token))
