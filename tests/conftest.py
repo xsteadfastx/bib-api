@@ -11,7 +11,25 @@ def pytest_configure(config):
 
 
 @pytest.yield_fixture
-def app():
+def redis_conn():
+    import redis
+
+    r = redis.StrictRedis(host=os.environ['REDIS_PORT_6379_TCP_ADDR'])
+
+    yield r
+
+
+@pytest.yield_fixture
+def redis_clean(redis_conn):
+    redis_conn.flushall()
+
+    yield
+
+    redis_conn.flushall()
+
+
+@pytest.yield_fixture
+def app(redis_clean):
     from app.app import create_app
 
     app = create_app('test.cfg')
@@ -59,15 +77,3 @@ def flask_client(flask_app):
     with flask_app.text_client() as client:
 
         yield client
-
-
-@pytest.yield_fixture
-def redis_conn():
-    import redis
-
-    r = redis.StrictRedis(host=os.environ['REDIS_PORT_6379_TCP_ADDR'])
-    r.flushall()
-
-    yield r
-
-    r.flushall()
