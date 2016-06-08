@@ -219,6 +219,17 @@ def test_lent_list(lent_return, expected, client, monkeypatch):
             ]
 
         }
+    ),
+    (
+        {
+            'items': [],
+            'saldo': None
+        },
+        {
+            'status_code': 200,
+            'content_type': 'text/calendar; charset=utf-8',
+            'events': []
+        }
     )
 ])
 def test_lent_ical(lent_return, expected, client, monkeypatch, redis_conn):

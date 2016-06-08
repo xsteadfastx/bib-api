@@ -39,6 +39,16 @@ from app.api.ical import build_ical
             ]
         }
 
+    ),
+    (
+        {
+            'saldo': '',
+            'items': []
+        },
+        {
+            'number_of_events': 0,
+            'events': []
+        }
     )
 ])
 def test_build_ical(input, expected):
