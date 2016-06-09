@@ -4,13 +4,13 @@ import datetime
 import json
 import pytest
 
-from app.api import schemes
-from app.api.ical import build_ical
+from app.mod_api import schemes
+from app.mod_api.ical import build_ical
 from tests.utils import load_json, verify_token
 
 
 def test_facility_list(client, monkeypatch):
-    monkeypatch.setattr('app.api.views.current_app.facilities',
+    monkeypatch.setattr('app.mod_api.views.current_app.facilities',
                         {'wolfsburg': {}, 'nuernberg': {}, 'paris': {}})
 
     rv = client.get('/api/facilities')
@@ -75,7 +75,7 @@ def test_facility_list(client, monkeypatch):
 ])
 def test_search(search_return, expected, client, monkeypatch):
     monkeypatch.setattr(
-        'app.api.views.current_app.facilities',
+        'app.mod_api.views.current_app.facilities',
         {
             'wolfsburg': {
                 'search': lambda term, page: search_return
@@ -111,7 +111,7 @@ def test_search(search_return, expected, client, monkeypatch):
 
 ])
 def test_get_token(url, data, expected, status_code, client, monkeypatch):
-    monkeypatch.setattr('app.api.views.current_app.facilities',
+    monkeypatch.setattr('app.mod_api.views.current_app.facilities',
                         {'wolfsburg': {}})
 
     rv = client.post(url, data=json.dumps(data),
@@ -166,7 +166,7 @@ def test_get_token(url, data, expected, status_code, client, monkeypatch):
     )
 ])
 def test_lent_list(lent_return, expected, client, monkeypatch):
-    monkeypatch.setattr('app.api.views.current_app.facilities',
+    monkeypatch.setattr('app.mod_api.views.current_app.facilities',
                         {
                             'wolfsburg': {
                                 'lent_list': lambda x, y: lent_return
@@ -233,7 +233,7 @@ def test_lent_list(lent_return, expected, client, monkeypatch):
     )
 ])
 def test_lent_ical(lent_return, expected, client, monkeypatch, redis_conn):
-    monkeypatch.setattr('app.api.views.current_app.facilities',
+    monkeypatch.setattr('app.mod_api.views.current_app.facilities',
                         {
                             'wolfsburg': {
                                 'lent_list': lambda x, y: lent_return
@@ -327,7 +327,7 @@ def test_lent_ical(lent_return, expected, client, monkeypatch, redis_conn):
 ])
 def test_lent_ical_older_than_two_hours(lent_return, expected, client,
                                         monkeypatch, redis_conn):
-    monkeypatch.setattr('app.api.views.current_app.facilities',
+    monkeypatch.setattr('app.mod_api.views.current_app.facilities',
                         {
                             'wolfsburg': {
                                 'lent_list': lambda x, y: lent_return

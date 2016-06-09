@@ -2,7 +2,7 @@ from datetime import datetime
 from ics import Calendar
 import pytest
 
-from app.api.ical import build_ical
+from app.mod_api.ical import build_ical
 
 
 @pytest.mark.parametrize('input,expected', [

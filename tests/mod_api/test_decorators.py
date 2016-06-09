@@ -3,7 +3,7 @@ import pytest
 
 from tests.utils import load_json
 
-from app.api.decorators import valid_facility, valid_token
+from app.mod_api.decorators import valid_facility, valid_token
 
 
 @pytest.mark.parametrize('facility,status_code,data', [
@@ -15,7 +15,7 @@ def test_valid_facility(facility, status_code, data, flask_app, monkeypatch):
     class MockApp(object):
         facilities = {'wolfsburg': {}}
 
-    monkeypatch.setattr('app.api.decorators.current_app', MockApp)
+    monkeypatch.setattr('app.mod_api.decorators.current_app', MockApp)
 
     @flask_app.route('/<facility>/valid')
     @valid_facility

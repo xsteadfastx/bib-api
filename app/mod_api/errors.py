@@ -1,6 +1,6 @@
 from flask import jsonify
 
-from app.api import api
+from app.mod_api import mod_api
 
 
 class InvalidUsage(Exception):
@@ -21,7 +21,7 @@ class InvalidUsage(Exception):
         return rv
 
 
-@api.errorhandler(InvalidUsage)
+@mod_api.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
     """Needed errorhandler for the app."""
     response = jsonify(error.to_dict())

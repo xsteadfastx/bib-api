@@ -52,7 +52,7 @@ def client(app):
 def flask_app():
     from flask import Flask, jsonify
 
-    from app.api.errors import InvalidUsage
+    from app.mod_api.errors import InvalidUsage
 
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'testing'

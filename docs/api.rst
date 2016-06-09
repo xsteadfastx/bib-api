@@ -17,13 +17,13 @@ Browser
 
 Decorators
 ----------
-.. automodule:: app.api.decorators
+.. automodule:: app.mod_api.decorators
     :members:
 
 
 iCalendar
 ---------
-.. automodule:: app.api.ical
+.. automodule:: app.mod_api.ical
     :members:
 
 

@@ -3,7 +3,7 @@ from functools import wraps
 from flask import current_app, request
 from itsdangerous import URLSafeSerializer
 
-from app.api.errors import InvalidUsage
+from app.mod_api.errors import InvalidUsage
 
 
 def valid_facility(f):

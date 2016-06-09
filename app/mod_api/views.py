@@ -2,13 +2,13 @@ from flask import current_app, jsonify, request, Response, g
 from itsdangerous import URLSafeSerializer
 import arrow
 
-from app.api import api, schemes
-from app.api.decorators import valid_facility, valid_token
-from app.api.errors import InvalidUsage
-from app.api.ical import build_ical
+from app.mod_api import mod_api, schemes
+from app.mod_api.decorators import valid_facility, valid_token
+from app.mod_api.errors import InvalidUsage
+from app.mod_api.ical import build_ical
 
 
-@api.route('/facilities', methods=['GET'])
+@mod_api.route('/facilities', methods=['GET'])
 def facility_list():
     """List all available facilities.
 
@@ -28,7 +28,7 @@ def facility_list():
     return jsonify(facilities=list(current_app.facilities.keys()))
 
 
-@api.route('/<facility>/search', methods=['POST'])
+@mod_api.route('/<facility>/search', methods=['POST'])
 @valid_facility
 def search(facility):
     """Search library for items.
@@ -98,7 +98,7 @@ def search(facility):
     return jsonify(data.data)
 
 
-@api.route('/<facility>/token', methods=['POST'])
+@mod_api.route('/<facility>/token', methods=['POST'])
 @valid_facility
 def get_token(facility):
     """Creates a authentication token.
@@ -143,7 +143,7 @@ def get_token(facility):
     return jsonify(data.data)
 
 
-@api.route('/<facility>/lent', methods=['GET'])
+@mod_api.route('/<facility>/lent', methods=['GET'])
 @valid_facility
 @valid_token
 def lent_list(facility):
@@ -193,7 +193,7 @@ def lent_list(facility):
     return jsonify(data.data)
 
 
-@api.route('/<facility>/ical/lent.ics', methods=['GET'])
+@mod_api.route('/<facility>/ical/lent.ics', methods=['GET'])
 @valid_facility
 @valid_token
 def lent_ical(facility):
