@@ -1,9 +1,10 @@
-# bib-api
+![bib-api](images/logo.png)
+
 [![Build Status](https://travis-ci.org/xsteadfastx/bib-api.svg?branch=master)](https://travis-ci.org/xsteadfastx/bib-api)
 
 Unofficial library API
 
-## Supported facilities
+## supported facilities
 
 - [Stadtbibliothek Wolfsburg](http://webopac.stadt.wolfsburg.de/webopac/index.asp?DB=web_biblio)
 
