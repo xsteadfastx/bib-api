@@ -1,5 +1,4 @@
-bib-api
-=======
+.. figure:: ../images/logo.png
 
 Contents:
 
