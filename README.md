@@ -1,8 +1,11 @@
 # bib-api
 [![Build Status](https://travis-ci.org/xsteadfastx/bib-api.svg?branch=master)](https://travis-ci.org/xsteadfastx/bib-api)
-[![Coverage Status](https://coveralls.io/repos/xsteadfastx/bib-api/badge.svg?branch=master)](https://coveralls.io/r/xsteadfastx/bib-api?branch=master)
 
-Unofficial Stadtbibliothek Nürnberg API
+Unofficial library API
+
+## Supported facilities
+
+- [Stadtbibliothek Wolfsburg](http://webopac.stadt.wolfsburg.de/webopac/index.asp?DB=web_biblio)
 
 ## using docker-compose
 
