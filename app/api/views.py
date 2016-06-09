@@ -197,6 +197,41 @@ def lent_list(facility):
 @valid_facility
 @valid_token
 def lent_ical(facility):
+    """Returns a calendar for all lent items in the ical format.
+
+    The calendar file includes all return dates for all lent items. It can be
+    used for importing them into other calendar software like the
+    Google calendar or Thunderbird Lightning.
+
+    Request::
+
+        http GET localhost:5000/api/wolfsburg/ical/lent.ics?token=pIUBfh1se
+
+    Response::
+
+        BEGIN:VCALENDAR
+        PRODID:ics.py - http://git.io/lLljaA
+        VERSION:2.0
+        BEGIN:VEVENT
+        DTSTAMP:20160609T101434Z
+        DTSTART:20160415T000000Z
+        SUMMARY:Bibliotheksrueckgaben: 2
+        DESCRIPTION:Dürer\, Albrecht: Albrecht Dürer\\nHopper\, Edward: Edward
+        UID:7a3fcb35-2cb4-48d3-ab56-2cf62af04337@7a3f.org
+        END:VEVENT
+        BEGIN:VEVENT
+        DTSTAMP:20160609T101434Z
+        DTSTART:20160420T000000Z
+        SUMMARY:Bibliotheksrueckgaben: 1
+        DESCRIPTION:Hopkins\, John: Modezeichnen
+        UID:86474116-dfd6-408f-9c2b-2e2cb552ab9b@8647.org
+        END:VEVENT
+        END:VCALENDAR
+
+    :param facility: The facility to get a lent list from.
+    :type facility: str
+
+    """
     s = URLSafeSerializer(current_app.config['SECRET_KEY'], salt=facility)
 
     token = request.args['token']
