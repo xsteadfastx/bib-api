@@ -37,8 +37,8 @@ Wolfsburg
     :members:
 
 
-Tools
+Utils
 -----
 
-.. automodule:: app.tools
+.. automodule:: app.utils
     :members:

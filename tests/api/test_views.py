@@ -6,7 +6,7 @@ import pytest
 
 from app.api import schemes
 from app.api.ical import build_ical
-from tests.tools import load_json, verify_token
+from tests.utils import load_json, verify_token
 
 
 def test_facility_list(client, monkeypatch):

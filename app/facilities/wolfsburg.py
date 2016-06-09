@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 
 from app.browser import create_browser
-from app.tools import next_page
+from app.utils import next_page
 
 
 def search(term, page=1):

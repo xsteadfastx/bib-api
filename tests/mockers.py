@@ -1,4 +1,4 @@
-from tests.tools import file_path
+from tests.utils import file_path
 
 
 class MockBrowser(object):

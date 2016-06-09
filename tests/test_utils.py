@@ -1,6 +1,6 @@
 import pytest
 
-from app import tools
+from app import utils
 
 
 @pytest.mark.parametrize('input,expected', [
@@ -10,4 +10,4 @@ from app import tools
     ((['a', 'b', 'c'], 'd'), None)
 ])
 def test_next_page(input, expected):
-    assert tools.next_page(input[0], input[1]) == expected
+    assert utils.next_page(input[0], input[1]) == expected

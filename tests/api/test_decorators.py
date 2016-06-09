@@ -1,7 +1,7 @@
 from flask import jsonify
 import pytest
 
-from tests.tools import load_json
+from tests.utils import load_json
 
 from app.api.decorators import valid_facility, valid_token
 

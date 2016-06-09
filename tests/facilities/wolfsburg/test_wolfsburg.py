@@ -1,9 +1,9 @@
 from datetime import date
 import pytest
 
-from tests.tools import file_path
 from tests.mockers import (MockBrowserSearch, MockBrowserLogin,
                            MockBrowserRentList)
+from tests.utils import file_path
 
 from app.facilities import wolfsburg
 
