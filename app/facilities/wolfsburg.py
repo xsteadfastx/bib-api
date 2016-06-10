@@ -9,6 +9,13 @@ from app.browser import create_browser
 from app.utils import next_page
 
 
+metadata = {
+    'name': 'Stadtbibliothek Wolfsburg',
+    'city': 'Wolfsburg',
+    'url': 'http://webopac.stadt.wolfsburg.de/webopac/index.asp?DB=web_biblio'
+}
+
+
 def search(term, page=1):
     """Searches for a term.
 

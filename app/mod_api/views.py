@@ -19,13 +19,21 @@ def facility_list():
     Response::
 
         {
-            "facilities": [
-                "wolfsburg"
-            ]
-
+            "facilities": {
+                "wolfsburg": {
+                    "city": "Wolfsburg",
+                    "name": "Stadtbibliothek Wolfsburg",
+                    "url": "http://webopac.stadt.wolfsburg.de"
+                }
+            }
         }
-    """
-    return jsonify(facilities=list(current_app.facilities.keys()))
+
+      """
+    facilities = {}
+    for i, j in current_app.facilities.items():
+        facilities[i] = j['metadata']
+
+    return jsonify(facilities=facilities)
 
 
 @mod_api.route('/<facility>/search', methods=['POST'])

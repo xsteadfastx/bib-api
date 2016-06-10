@@ -1,4 +1,4 @@
-![bib-api](images/logo.png)
+![bib-api](app/static/images/logo.png)
 
 [![Build Status](https://travis-ci.org/xsteadfastx/bib-api.svg?branch=master)](https://travis-ci.org/xsteadfastx/bib-api)
 [![Documentation Status](https://readthedocs.org/projects/bib-api/badge/?version=latest)](http://bib-api.readthedocs.io/en/latest/?badge=latest)

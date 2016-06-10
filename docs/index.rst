@@ -1,4 +1,4 @@
-.. figure:: ../images/logo.png
+.. figure:: ../app/static/images/logo.png
 
 Contents:
 

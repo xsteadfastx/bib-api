@@ -11,7 +11,11 @@ from tests.utils import load_json, verify_token
 
 def test_facility_list(client, monkeypatch):
     monkeypatch.setattr('app.mod_api.views.current_app.facilities',
-                        {'wolfsburg': {}, 'nuernberg': {}, 'paris': {}})
+                        {
+                            'wolfsburg': {'metadata': {}},
+                            'nuernberg': {'metadata': {}},
+                            'paris': {'metadata': {}}
+                        })
 
     rv = client.get('/api/facilities')
 
