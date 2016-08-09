@@ -33,7 +33,7 @@
 - name: run batcave
   become: no
   command:
-    ~/miniconda3/envs/ansible/bin/ansible-playbook -i hosts base.yml -c local --extra-vars="hosts=localhost"
+    ~/miniconda3/envs/ansible/bin/ansible-playbook -i hosts shell.yml -c local --extra-vars="hosts=127.0.0.1"
     chdir=~/.batcave
 
 - name: create conda environment

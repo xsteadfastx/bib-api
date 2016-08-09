@@ -1,6 +1,6 @@
 ---
 - name: setup
-  hosts: all
+  hosts: bib-api
   become: yes
 
   roles:

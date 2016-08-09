@@ -6,8 +6,6 @@ RUN locale-gen de_DE.UTF-8
 RUN apt-get update \
  && apt-get install -y \
       openssh-server \
-      redis-server \
-      supervisor \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # User and SSH
@@ -20,8 +18,5 @@ RUN useradd --create-home -s /bin/bash vagrant \
  && echo -n 'vagrant:vagrant' | chpasswd \
  && echo 'vagrant ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/vagrant
 
-# Add files
-ADD root /
-
 EXPOSE 22
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/sbin/sshd", "-D", "-o UseDNS=no", "-o UsePAM=no"]
