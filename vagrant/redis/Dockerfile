@@ -6,4 +6,4 @@ RUN apk add --update \
  && rm -rf /var/cache/apk/*
 
 EXPOSE 6379
-CMD ["su-exec", "redis", "redis-server"]
+CMD ["su-exec", "redis", "redis-server", "--protected-mode no"]

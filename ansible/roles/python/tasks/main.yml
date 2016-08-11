@@ -1,0 +1,45 @@
+---
+- name: add deadsnakes ppa
+  apt_repository:
+    repo='ppa:fkrull/deadsnakes'
+    state=present
+
+- name: install deps
+  apt:
+    pkg={{ item }}
+    state=latest
+  with_items:
+    - python3.5
+
+- name: check if pip is installed
+  command: 'pip --version'
+  ignore_errors: true
+  changed_when: false
+  always_run: true
+  register: pip_is_installed
+
+- name: download pip
+  get_url:
+    url=https://bootstrap.pypa.io/get-pip.py
+    dest=/tmp
+  when: pip_is_installed.rc != 0
+
+- name: install pip
+  command: 'python3.5 /tmp/get-pip.py'
+  when: pip_is_installed.rc != 0
+
+- name: delete get-pip.py.
+  file:
+    state=absent
+    path=/tmp/get-pip.py
+  when: pip_is_installed.rc != 0
+
+- name: upgrade pip
+  pip:
+    name=pip
+    state=latest
+
+- name: install virtualenv
+  pip:
+    name=virtualenv
+    state=latest

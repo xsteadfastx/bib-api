@@ -6,5 +6,6 @@
   roles:
     - common
     - phantomjs
-    - miniconda
+    - python
+    - ansible
     - dev_env

@@ -1,28 +1,35 @@
 ---
 - name: install deps
-  apt: pkg={{ item }} state=latest update_cache=true
+  apt:
+    pkg={{ item }}
+    state=latest
   with_items:
     - git
-    - libffi-dev
-    - libssl-dev
+    - libxml2-dev
+    - libxslt1-dev
     - make
-    - python3
-    - python3-flake8
-    - redis-server
+    - python3.5-dev
     - tree
+    - zlib1g-dev
 
-- name: create ansible environment
-  become: no
-  command: ~/miniconda3/bin/conda create -n ansible python=2.7 --yes
-  args:
-    creates: ~/miniconda3/envs/ansible
-
-- name: install ansible
-  become: no
+- name: install deps
   pip:
-    name=ansible
-    executable=~/miniconda3/envs/ansible/bin/pip
-    state=present
+    name={{ item }}
+    state=latest
+  with_items:
+    - flake8
+    - tox
+
+- stat: path=~/.batcave
+  become: no
+  register: batcave
+
+- name: remove batcave
+  become: no
+  file:
+    path=~/.batcave
+    state=absent
+  when: batcave.stat.exists
 
 - name: clone batcave
   become: no
@@ -33,11 +40,19 @@
 - name: run batcave
   become: no
   command:
-    ~/miniconda3/envs/ansible/bin/ansible-playbook -i hosts shell.yml -c local --extra-vars="hosts=127.0.0.1"
+    ansible-playbook -i hosts shell.yml -c local --extra-vars="hosts=127.0.0.1"
     chdir=~/.batcave
 
-- name: create conda environment
+- name: create virtualenv
   become: no
-  command:
-    ~/miniconda3/bin/conda env create --force
-    chdir=/vagrant
+  pip:
+    requirements=/vagrant/requirements.txt
+    virtualenv=~/.virtualenvs/bib-api
+
+- name: add env variables to xonshrc
+  become: no
+  lineinfile:
+     line="{{ item }}"
+     dest=~/.xonshrc
+  with_items:
+    - $REDIS_PORT_6379_TCP_ADDR = 'redis'
