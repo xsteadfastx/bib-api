@@ -26,11 +26,12 @@ Vagrant.configure(2) do |config|
 
     bibapi.ssh.port = 22
     bibapi.ssh.forward_agent = true
+    bibapi.ssh.forward_env = ["LC_UID"]
 
     bibapi.vm.provision "ansible" do |ansible|
       ansible.playbook = "ansible/vagrant.yml"
       ansible.limit = "all"
-      ansible.verbose = "v"
+      #ansible.verbose = "v"
       ansible.host_key_checking = false
     end
 

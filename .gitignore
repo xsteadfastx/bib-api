@@ -62,3 +62,4 @@ junit-*.xml
 pep8.out
 pylint.out
 _build
+*.retry

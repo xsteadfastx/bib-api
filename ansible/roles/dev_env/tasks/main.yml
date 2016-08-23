@@ -56,3 +56,9 @@
      dest=~/.xonshrc
   with_items:
     - $REDIS_PORT_6379_TCP_ADDR = 'redis'
+
+- name: change user id
+  user:
+    name=vagrant
+    uid={{ lookup('env', 'LC_UID') }}
+    group=vagrant
