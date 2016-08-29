@@ -7,7 +7,7 @@ Vagrant.configure(2) do |config|
 
     redis.vm.provider "docker" do |d|
       d.name = "bib-api-redis"
-      d.build_dir = "./vagrant/redis"
+      d.image = "redis:alpine"
     end
 
   end

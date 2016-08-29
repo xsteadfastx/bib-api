@@ -1,4 +1,4 @@
-FROM 32bit/ubuntu:14.04
+FROM ubuntu:trusty
 
 ENV LANG C.UTF-8
 RUN locale-gen de_DE.UTF-8
