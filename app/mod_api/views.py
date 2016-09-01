@@ -1,6 +1,7 @@
+import arrow
+
 from flask import current_app, jsonify, request, Response, g
 from itsdangerous import URLSafeSerializer
-import arrow
 
 from app.mod_api import mod_api, schemes
 from app.mod_api.decorators import valid_facility, valid_token

@@ -1,13 +1,16 @@
-from datetime import date, datetime
-from urllib.parse import urljoin
 import re
+import logging
 
 from bs4 import BeautifulSoup
+from datetime import date, datetime
 from selenium.webdriver.common.keys import Keys
+from urllib.parse import urljoin
 
 from app.browser import create_browser
 from app.utils import next_page
 
+
+logger = logging.getLogger('app')
 
 metadata = {
     'name': 'Stadtbibliothek Wolfsburg',
@@ -62,7 +65,10 @@ def search(term, page=1):
 
     next_page_number = next_page(page_numbers, page)
 
-    return {'results': results, 'next_page': next_page_number}
+    return_value = {'results': results, 'next_page': next_page_number}
+
+    logger.debug(return_value)
+    return return_value
 
 
 def parse_search_title_overview(page_source, base_url):
@@ -269,9 +275,11 @@ def login(browser, cardnumber, password):
     browser.find_element_by_name('B1').click()
 
     if "Konto für Ausweis" in browser.page_source:
+        logger.debug('login sucessful')
         return True
 
     else:
+        logger.debug('login failed')
         return False
 
 
@@ -291,7 +299,10 @@ def lent_list(cardnumber, password):
     items = parse_lent_list(browser.page_source)
     saldo = parse_saldo(browser.page_source)
 
-    return {'items': items, 'saldo': saldo}
+    return_value = {'items': items, 'saldo': saldo}
+
+    logger.debug(return_value)
+    return return_value
 
 
 def parse_lent_list(page_source):

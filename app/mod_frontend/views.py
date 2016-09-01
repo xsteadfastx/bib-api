@@ -1,15 +1,21 @@
+import requests
+
 from flask import current_app, render_template, url_for, flash
 from flask_wtf import Form, RecaptchaField
 from wtforms import StringField, PasswordField, SelectField, SubmitField
 from wtforms.validators import DataRequired
-import requests
 
 from app.mod_frontend import mod_frontend
 
 
 @mod_frontend.route('/', methods=['GET', 'POST'])
 def index():
-    """
+    """Landing page.
+
+    This is the main page when accessing the app through a web browser. It
+    gives some basic informations and links to the sourcecode and documentary.
+    It also has some kind of API example. You can get a ical link through
+    entering credentials in the form.
     """
     class GetIcalForm(Form):
         username = StringField(
@@ -49,6 +55,9 @@ def index():
                 token_url = '{}?token={}'.format(
                     url_for('mod_api.lent_ical', facility=form.facility.data),
                     token)
+                current_app.logger.info(
+                    'created token url: {}'.format(token_url)
+                )
 
                 flash(token_url, 'success')
 
