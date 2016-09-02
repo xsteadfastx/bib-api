@@ -77,3 +77,9 @@ body {
     border-bottom: 0;
   }
 }
+
+/* fonts */
+h2, h3, h4 {
+  font-family: 'Garamond', 'Georgia', 'serif';
+  font-weight: normal;
+}

@@ -39,16 +39,20 @@
         <p><a class="btn btn-lg btn-success" href="#ical" role="button">Test it</a></p>
       </div>
 
+      <hr>
+
       <a name="facilities"></a>
-      <h1>Supported facilities</h1>
+      <h3>Supported facilities</h3>
       {% for i, j in facilities.items() %}
       <ul>
         <li><a href="{{ j.url }}">{{ j.name }}</a> ({{ j.city }})</li>
       </ul>
       {% endfor %}
 
+      <hr>
+
       <a name="ical"></a>
-      <h1>Get a iCal url</h1>
+      <h3>Get a iCal url</h3>
       <p>This is a example for using the API. With a username and password for a facility it will generate a url with a valid token to get your lent item return dates in a iCal format to use in your calendar software.</p>
       {{ wtf.quick_form(form, button_map={'submit': 'primary'}) }}
 
